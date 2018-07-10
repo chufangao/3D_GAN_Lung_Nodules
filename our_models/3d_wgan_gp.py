@@ -21,7 +21,7 @@ import numpy as np
 from keras.models import Model, Sequential
 from keras.layers import Input, Dense, Reshape, Flatten
 from keras.layers.merge import _Merge
-from keras.layers.convolutional import Convolution2D, Conv2DTranspose
+from keras.layers.convolutional import Convolution3D, UpSampling3D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras.optimizers import Adam
@@ -45,28 +45,28 @@ def make_generator():
     model = Sequential()
     model.add(Dense(1024, input_dim=100))
     model.add(LeakyReLU())
-    model.add(Dense(128 * 7 * 7))
+    model.add(Dense(128 * 10 * 10 * 9))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     if K.image_data_format() == 'channels_first':
-        model.add(Reshape((128, 7, 7), input_shape=(128 * 7 * 7,)))
+        model.add(Reshape((128, 10, 10, 9), input_shape=(128 * 10 * 10 * 9,)))
         bn_axis = 1
     else:
-        model.add(Reshape((7, 7, 128), input_shape=(128 * 7 * 7,)))
+        model.add(Reshape((10, 10, 9, 128), input_shape=(128 * 10 * 10 * 9,)))
         bn_axis = -1
-    model.add(Conv2DTranspose(128, (5, 5), strides=2, padding='same'))
+    model.add(UpSampling3D(size=(2, 2, 2)))
     model.add(BatchNormalization(axis=bn_axis))
     model.add(LeakyReLU())
-    model.add(Convolution2D(64, (5, 5), padding='same'))
+    model.add(Convolution3D(64, (3, 3, 3), padding='same'))
     model.add(BatchNormalization(axis=bn_axis))
     model.add(LeakyReLU())
-    model.add(Conv2DTranspose(64, (5, 5), strides=2, padding='same'))
+    model.add(UpSampling3D(size=(2, 2, 1)))
     model.add(BatchNormalization(axis=bn_axis))
     model.add(LeakyReLU())
     # Because we normalized training inputs to lie in the range [-1, 1],
     # the tanh function should be used for the output of the generator to ensure its output
     # also lies in this range.
-    model.add(Convolution2D(1, (5, 5), padding='same', activation='tanh'))
+    model.add(Convolution3D(1, (3, 3, 3), padding='same', activation='tanh'))
     return model
 
 def tile_images(image_stack):
@@ -90,5 +90,5 @@ gen = make_generator()
 input = Input(shape=(100,))
 layers = gen(input)
 model = Model(inputs = [input], outputs = [layers])
-model.compile(optimizer=Adam(), loss = lambda y_true, y_pred: K.mean(y_true * y_pred))
+model.compile(optimizer=Adam(), loss=lambda y_true, y_pred: K.mean(y_true * y_pred))
 model.layers[1].summary()
