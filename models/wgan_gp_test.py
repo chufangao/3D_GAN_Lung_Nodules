@@ -9,7 +9,8 @@ from keras.optimizers import RMSprop
 from functools import partial
 
 import keras.backend as K
-
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import sys

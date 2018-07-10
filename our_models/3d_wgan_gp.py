@@ -166,25 +166,26 @@ class RandomWeightedAverage(_Merge):
     Improvements appreciated."""
 
     def _merge_function(self, inputs):
-        weights = K.random_uniform((BATCH_SIZE, 1, 1, 1))
+        weights = K.random_uniform((BATCH_SIZE, 1, 1, 1, 1))
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
-# gen = make_generator()
-# input = Input(shape=(100,))
-# layers = gen(input)
-# model = Model(inputs = [input], outputs = [layers])
-# model.compile(optimizer=Adam(), loss=wasserstein_loss)
-# model.layers[1].summary()
-# # out = model.predict(np.random.rand(10, 100))
-# # print(out.shape)
+gen = make_generator()
+input = Input(shape=(100,))
+layers = gen(input)
+model = Model(inputs = [input], outputs = [layers])
+model.compile(optimizer=Adam(), loss=wasserstein_loss)
+model.layers[1].summary()
+out = model.predict(np.random.rand(10, 100))
+print(out.shape)
 # crit = make_discriminator()
 # crit.summary()
 
 #load the data for training the WGAN-GP and convert it into an ndarray
 x_train = None
-with open('/home/cc/Data/PositiveAugmented.pickle') as f:
+with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
-x_train = np.asarray(x_train[0:10])
+x_train = np.asarray(x_train[0:100])
+x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
 
 # Now we initialize the generator and discriminator.
 generator = make_generator()
@@ -223,6 +224,8 @@ generated_samples_for_discriminator = generator(generator_input_for_discriminato
 discriminator_output_from_generator = discriminator(generated_samples_for_discriminator)
 discriminator_output_from_real_samples = discriminator(real_samples)
 
+print(generated_samples_for_discriminator.shape)
+print(real_samples.shape)
 # We also need to generate weighted-averages of real and generated samples, to use for the gradient norm penalty.
 averaged_samples = RandomWeightedAverage()([real_samples, generated_samples_for_discriminator])
 # We then run these samples through the discriminator as well. Note that we never really use the discriminator
