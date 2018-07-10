@@ -184,8 +184,7 @@ class RandomWeightedAverage(_Merge):
 x_train = None
 with open('/home/cc/Data/PositiveAugmented.pickle') as f:
     x_train = pickle.load(f)
-x_train = np.asarray(x_train)
-
+x_train = np.asarray(x_train[0:10])
 
 # Now we initialize the generator and discriminator.
 generator = make_generator()
