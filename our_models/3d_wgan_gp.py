@@ -158,7 +158,7 @@ def wasserstein_loss(y_true, y_pred):
     Note that the nature of this loss means that it can be (and frequently will be) less than 0."""
     return K.mean(y_true * y_pred)
 
-class  `                                                                                                                                                                                                                                                                                                    RandomWeightedAverage(_Merge):
+class RandomWeightedAverage(_Merge):
     """Takes a randomly-weighted average of two tensors. In geometric terms, this outputs a random point on the line
     between each pair of input points.
 
@@ -192,7 +192,7 @@ generator = make_generator()
 discriminator = make_discriminator()
 
 # The generator_model is used when we want to train the generator layers.
-# As such, we ensure that the discriminator layers are not trainable.
+i# As such, we ensure that the discriminator layers are not trainable.
 # Note that once we compile this model, updating .trainable will have no effect within it. As such, it
 # won't cause problems if we later set discriminator.trainable = True for the discriminator_model, as long
 # as we compile the generator_model first.
