@@ -158,7 +158,7 @@ def wasserstein_loss(y_true, y_pred):
     Note that the nature of this loss means that it can be (and frequently will be) less than 0."""
     return K.mean(y_true * y_pred)
 
-class RandomWeightedAverage(_Merge):
+class  `                                                                                                                                                                                                                                                                                                    RandomWeightedAverage(_Merge):
     """Takes a randomly-weighted average of two tensors. In geometric terms, this outputs a random point on the line
     between each pair of input points.
 
@@ -279,5 +279,12 @@ for epoch in range(100):
             discriminator_loss.append(discriminator_model.train_on_batch([image_batch, noise],
                                                                          [positive_y, negative_y, dummy_y]))
         generator_loss.append(generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y))
+
+    the_noise = np.random.rand(50, 100).astype(np.float32)
+    the_fakes = generator.predict(the_noise)
+    with open('generated_nodules.pickle', 'wb') as handle
+        pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
     # Still needs some code to display losses from the generator and discriminator, progress bars, etc.
     # generate_images(generator, args.output_dir, epoch)
