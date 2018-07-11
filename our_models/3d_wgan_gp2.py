@@ -40,7 +40,7 @@ except ImportError:
     print('This script depends on pillow! Please install it (e.g. with pip install pillow)')
     exit()
 
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
 
@@ -286,12 +286,9 @@ for epoch in range(101):
         print('d_update',d_update)
         batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
         image_batch = x_train[batch_indices]
-        print('img_batch shape',image_batch.shape)
         d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
-        print(type(d_loss))
 
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
-    print(type(g_loss))
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:

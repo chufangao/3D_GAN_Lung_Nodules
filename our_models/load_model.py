@@ -18,6 +18,7 @@ The model saves images using pillow. If you don't have pillow, either install it
 import argparse
 import os
 import numpy as np
+import keras
 from keras.models import Model, Sequential
 from keras.layers import Input, Dense, Reshape, Flatten
 from keras.layers.merge import _Merge
@@ -250,12 +251,9 @@ for epoch in range(LAST_EPOCH,LAST_EPOCH+101):
         print('d_update',d_update)
         batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
         image_batch = x_train[batch_indices]
-        print('img_batch shape',image_batch.shape)
         d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
-        print(type(d_loss))
 
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
-    print(type(g_loss))
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:
@@ -267,7 +265,7 @@ for epoch in range(LAST_EPOCH,LAST_EPOCH+101):
 
         # save model
         generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
-        discriminator_model.save('saved_models/d_model'+str(epoch)+'.h5')
+        discriminator.save('saved_models/d_model'+str(epoch)+'.h5')
         generator.save('saved_models/g_model'+str(epoch)+'.h5')
 
 
