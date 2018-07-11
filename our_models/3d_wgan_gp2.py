@@ -300,7 +300,6 @@ for epoch in range(101):
         the_fakes = generator.predict(the_noise)
         with open('/home/cc/deep_learning_reu/images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
         # save model
         generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
         discriminator.save('saved_models/d_model'+str(epoch)+'.h5')

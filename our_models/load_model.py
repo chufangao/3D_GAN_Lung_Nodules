@@ -43,35 +43,12 @@ except ImportError:
 BATCH_SIZE = 64
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
+LAST_EPOCH = 0
 
 def make_generator():
     """Creates a generator model that takes a 100-dimensional noise vector as a "seed", and outputs images
     of size 28x28x1."""
-    model = Sequential()
-    model.add(Dense(1024, input_dim=100))
-    model.add(LeakyReLU())
-    model.add(Dense(128 * 10 * 10 * 9))
-    model.add(BatchNormalization())
-    model.add(LeakyReLU())
-    if K.image_data_format() == 'channels_first':
-        model.add(Reshape((128, 10, 10, 9), input_shape=(128 * 10 * 10 * 9,)))
-        bn_axis = 1
-    else:
-        model.add(Reshape((10, 10, 9, 128), input_shape=(128 * 10 * 10 * 9,)))
-        bn_axis = -1
-    model.add(UpSampling3D(size=(2, 2, 2)))
-    model.add(BatchNormalization(axis=bn_axis))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(64, (5, 5, 3), padding='same'))
-    model.add(BatchNormalization(axis=bn_axis))
-    model.add(LeakyReLU())
-    model.add(UpSampling3D(size=(2, 2, 1)))
-    model.add(BatchNormalization(axis=bn_axis))
-    model.add(LeakyReLU())
-    # Because we normalized training inputs to lie in the range [-1, 1],
-    # the tanh function should be used for the output of the generator to ensure its output
-    # also lies in this range.
-    model.add(Convolution3D(1, (5, 5, 3), padding='same', activation='tanh'))
+    model = keras.models.load_model('saved_models/g_model' + str(LAST_EPOCH) + '.h5')
     return model
 
 def tile_images(image_stack):
@@ -98,20 +75,7 @@ def make_discriminator():
     as possible for real inputs.
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
-    model = Sequential()
-    if K.image_data_format() == 'channels_first':
-        model.add(Convolution3D(64, (5, 5, 5), padding='same', input_shape=(1, 40, 40, 18)))
-    else:
-        model.add(Convolution3D(64, (5, 5, 5), padding='same', input_shape=(40, 40, 18, 1)))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(128, (5, 5, 5), kernel_initializer='he_normal', strides=[2, 2, 1], padding='same'))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(128, (5, 5, 5), kernel_initializer='he_normal', padding='same', strides=[2, 2, 2]))
-    model.add(LeakyReLU())
-    model.add(Flatten())
-    model.add(Dense(1024, kernel_initializer='he_normal'))
-    model.add(LeakyReLU())
-    model.add(Dense(1, kernel_initializer='he_normal'))
+    model = keras.models.load_model('saved_models/d_model' + str(LAST_EPOCH) + '.h5')
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):
@@ -277,7 +241,7 @@ positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 print('entering training loop')
-for epoch in range(101):
+for epoch in range(LAST_EPOCH,LAST_EPOCH+101):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
     g_loss = []
