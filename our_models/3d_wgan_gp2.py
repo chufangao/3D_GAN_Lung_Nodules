@@ -303,7 +303,7 @@ for epoch in range(101):
 
         # save model
         generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
-        discriminator_model.save('saved_models/d_model'+str(epoch)+'.h5')
+        discriminator.save('saved_models/d_model'+str(epoch)+'.h5')
         generator.save('saved_models/g_model'+str(epoch)+'.h5')
 
 
