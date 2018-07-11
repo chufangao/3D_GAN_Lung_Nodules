@@ -29,6 +29,10 @@ from keras.datasets import mnist
 from keras import backend as K
 from functools import partial
 import pickle
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 
 try:
     from PIL import Image
@@ -169,14 +173,14 @@ class RandomWeightedAverage(_Merge):
         weights = K.random_uniform((BATCH_SIZE, 1, 1, 1, 1))
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
-gen = make_generator()
-input = Input(shape=(100,))
-layers = gen(input)
-model = Model(inputs = [input], outputs = [layers])
-model.compile(optimizer=Adam(), loss=wasserstein_loss)
-model.layers[1].summary()
-out = model.predict(np.random.rand(10, 100))
-print(out.shape)
+#gen = make_generator()
+#input = Input(shape=(100,))
+#layers = gen(input)
+#model = Model(inputs = [input], outputs = [layers])
+#model.compile(optimizer=Adam(), loss=wasserstein_loss)
+#model.layers[1].summary()
+#out = model.predict(np.random.rand(10, 100))
+#print(out.shape)
 # crit = make_discriminator()
 # crit.summary()
 
@@ -186,9 +190,15 @@ with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
 x_train = np.asarray(x_train)
 x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
-#halfRange = (np.max(x_train) - np.min(x_train))/2.0
-#x_train = (x_train - halfRange) / halfRange
-#print(np.max(x_train), np.min(x_train)); exit()
+
+minx = np.amin(x_train)
+halfRange = (np.amax(x_train) - minx)/2.0
+if minx < 0:
+    x_train -= minx
+x_train = (x_train - halfRange) / halfRange
+#plt.imsave('test.png',x_train[0,:,:,9,0])
+#print(np.amax(x_train), np.amin(x_train)); exit()
+
 
 # Now we initialize the generator and discriminator.
 generator = make_generator()
@@ -266,25 +276,28 @@ discriminator_model.compile(optimizer=Adam(0.0001, beta_1=0.5, beta_2=0.9),
 positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
-
+print('entering training loop')
 for epoch in range(101):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
     g_loss = []
 
-    for d_update in range(TRAINING_RATIO)
+    for d_update in range(TRAINING_RATIO):
+        print('d_update',d_update)
         batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
         image_batch = x_train[batch_indices]
-        d_loss = discriminator_model.train_on_batch([image_batch, the_noise],
-                                                                     [positive_y, negative_y, dummy_y])
+        print('img_batch shape',image_batch.shape)
+        d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
+        print(type(d_loss))
 
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
-    print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss, g_loss))
+    print(type(g_loss))
+    print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:
         noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
         the_fakes = generator.predict(the_noise)
-        with open('../images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
+        with open('/home/cc/deep_learning_reu/images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
