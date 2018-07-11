@@ -184,11 +184,11 @@ print(out.shape)
 x_train = None
 with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
-x_train = np.asarray(x_train[0:100])
+x_train = np.asarray(x_train[:])
 x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
-print(np.max(x_train)); exit
-x_train = x_train / np.max(x_train) - .5
-
+#halfRange = (np.max(x_train) - np.min(x_train))/2.0
+#x_train = (x_train - halfRange) / halfRange
+#print(np.max(x_train), np.min(x_train)); exit()
 
 # Now we initialize the generator and discriminator.
 generator = make_generator()
@@ -284,9 +284,9 @@ for epoch in range(101):
         generator_loss.append(generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y))
 
     if epoch % 10 == 0:
-        the_noise = np.random.rand(50, 100).astype(np.float32)
+        the_noise = np.random.rand(1, 100).astype(np.float32)
         the_fakes = generator.predict(the_noise)
-        with open('generated_nodules'+str(epoch)+.'pickle', 'wb') as handle:
+        with open('../images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
