@@ -264,7 +264,7 @@ positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 
-for epoch in range(100):
+for epoch in range(101):
     np.random.shuffle(x_train)
     print("Epoch: ", epoch)
     print("Number of batches: ", int(x_train.shape[0] // BATCH_SIZE))
@@ -280,10 +280,11 @@ for epoch in range(100):
                                                                          [positive_y, negative_y, dummy_y]))
         generator_loss.append(generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y))
 
-    the_noise = np.random.rand(50, 100).astype(np.float32)
-    the_fakes = generator.predict(the_noise)
-    with open('generated_nodules.pickle', 'wb') as handle
-        pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    if epoch % 10 == 0:
+        the_noise = np.random.rand(50, 100).astype(np.float32)
+        the_fakes = generator.predict(the_noise)
+        with open('generated_nodules'+str(epoch)+'_.pickle', 'wb') as handle
+            pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
     # Still needs some code to display losses from the generator and discriminator, progress bars, etc.
