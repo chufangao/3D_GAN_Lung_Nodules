@@ -295,11 +295,16 @@ for epoch in range(101):
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:
+        # save images
         noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
         the_fakes = generator.predict(the_noise)
         with open('/home/cc/deep_learning_reu/images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+        # save model
+        generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
+        discriminator_model.save('saved_models/d_model'+str(epoch)+'.h5')
+        generator.save('saved_models/g_model'+str(epoch)+'.h5')
 
 
 
