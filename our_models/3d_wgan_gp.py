@@ -186,13 +186,16 @@ with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
 x_train = np.asarray(x_train[0:100])
 x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
+print(np.max(x_train)); exit
+x_train = x_train / np.max(x_train) - .5
+
 
 # Now we initialize the generator and discriminator.
 generator = make_generator()
 discriminator = make_discriminator()
 
 # The generator_model is used when we want to train the generator layers.
-i# As such, we ensure that the discriminator layers are not trainable.
+# As such, we ensure that the discriminator layers are not trainable.
 # Note that once we compile this model, updating .trainable will have no effect within it. As such, it
 # won't cause problems if we later set discriminator.trainable = True for the discriminator_model, as long
 # as we compile the generator_model first.
@@ -283,7 +286,7 @@ for epoch in range(101):
     if epoch % 10 == 0:
         the_noise = np.random.rand(50, 100).astype(np.float32)
         the_fakes = generator.predict(the_noise)
-        with open('generated_nodules'+str(epoch)+'_.pickle', 'wb') as handle
+        with open('generated_nodules'+str(epoch)+.'pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
