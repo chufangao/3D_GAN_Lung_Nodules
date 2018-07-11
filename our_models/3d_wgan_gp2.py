@@ -279,7 +279,7 @@ for epoch in range(101):
                                                                      [positive_y, negative_y, dummy_y])
 
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
-    print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss, g_loss))
+    print("%d [D loss: %f] [G loss: %f]" % (epoch, discriminator_loss, g_loss))
 
     if epoch % 10 == 0:
         noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
