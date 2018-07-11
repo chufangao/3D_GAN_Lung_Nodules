@@ -269,17 +269,18 @@ dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 
 for epoch in range(101):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
-    discriminator_loss = []
-    generator_loss = []
+    d_loss = []
+    g_loss = []
 
     for d_update in range(TRAINING_RATIO)
         batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
         image_batch = x_train[batch_indices]
-        discriminator_loss.append(discriminator_model.train_on_batch([image_batch, the_noise],
-                                                                     [positive_y, negative_y, dummy_y]))
+        d_loss = discriminator_model.train_on_batch([image_batch, the_noise],
+                                                                     [positive_y, negative_y, dummy_y])
 
-    generator_loss.append(generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y))
-    
+    g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
+    print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss, g_loss))
+
     if epoch % 10 == 0:
         noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
         the_fakes = generator.predict(the_noise)
