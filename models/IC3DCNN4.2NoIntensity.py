@@ -99,7 +99,7 @@ cutoff = 4606
 loadedpos = None
 top_threshold = 2446
 bottom_threshold = -1434
-with open("PositiveAugmented.pickle", "rb") as f:
+with open("/home/cc/Data/PositiveAugmented.pickle", "rb") as f:
     print("fine")
     loadedpos = pickle.load(f)
 #for i in range(len(loadedpos)):
@@ -121,7 +121,7 @@ valpos = valpos.reshape(valpos.shape[0], x, y, z, 1)
 del loadedpos
 
 loadedneg = None
-with open("NegativeAugmented.pickle", "rb") as f:
+with open("/home/cc/Data/NegativeAugmented.pickle", "rb") as f:
     print("fine")
     loadedneg = pickle.load(f)
 #for i in range(len(loadedneg)):
