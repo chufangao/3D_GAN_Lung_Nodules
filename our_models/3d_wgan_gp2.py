@@ -277,7 +277,7 @@ positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 print('entering training loop')
-for epoch in range(101):
+for epoch in range(10000001):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
     g_loss = []

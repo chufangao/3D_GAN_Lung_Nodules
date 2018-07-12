@@ -50,7 +50,7 @@ def make_generator():
     model = Sequential()
     #model.add(Dense(1024, input_dim=100))
     #model.add(LeakyReLU())
-    model.add(Dense(128 * 10 * 10 * 9))
+    model.add(Dense(128 * 10 * 10 * 9, input_dim=100))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     if K.image_data_format() == 'channels_first':
@@ -277,7 +277,7 @@ positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 print('entering training loop')
-for epoch in range(101):
+for epoch in range(100001):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
     g_loss = []
