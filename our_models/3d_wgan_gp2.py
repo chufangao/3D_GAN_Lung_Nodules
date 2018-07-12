@@ -36,7 +36,7 @@ except ImportError:
     print('This script depends on pillow! Please install it (e.g. with pip install pillow)')
     exit()
 
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
 
@@ -275,19 +275,20 @@ for epoch in range(101):
     for d_update in range(TRAINING_RATIO):
         batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
         image_batch = x_train[batch_indices]
-        d_loss = discriminator_model.train_on_batch([image_batch, the_noise],
-                                                                     [positive_y, negative_y, dummy_y])
+       d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
 
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
-    print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss, g_loss))
+    print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:
         noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
         the_fakes = generator.predict(the_noise)
         with open('../images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-
+        # save model
+        generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
+        discriminator.save('saved_models/d_model'+str(epoch)+'.h5')
+        generator.save('saved_models/g_model'+str(epoch)+'.h5')
 
 
     # np.random.shuffle(x_train)

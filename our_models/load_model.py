@@ -49,7 +49,7 @@ LAST_EPOCH = 0
 def make_generator(last_epoch):
     """Creates a generator model that takes a 100-dimensional noise vector as a "seed", and outputs images
     of size 28x28x1."""
-    model = keras.models.load('saved_models/g_model' + str(last_epoch) + '.h5')
+    model = keras.models.load_model('saved_models/g_model' + str(LAST_EPOCH) + '.h5')
     return model
 
 def tile_images(image_stack):
@@ -76,7 +76,7 @@ def make_discriminator(last_epoch):
     as possible for real inputs.
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
-    model = keras.models.load('saved_models/d_model' + str(last_epoch) + '.h5')
+    model = keras.models.load_model('saved_models/d_model' + str(LAST_EPOCH) + '.h5')
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):
@@ -242,6 +242,7 @@ positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 print('entering training loop')
+
 for epoch in range(LAST_EPOCH, LAST_EPOCH+101):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
@@ -251,12 +252,9 @@ for epoch in range(LAST_EPOCH, LAST_EPOCH+101):
         print('d_update',d_update)
         batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
         image_batch = x_train[batch_indices]
-        print('img_batch shape',image_batch.shape)
         d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
-        print(type(d_loss))
 
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
-    print(type(g_loss))
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:
@@ -268,7 +266,7 @@ for epoch in range(LAST_EPOCH, LAST_EPOCH+101):
 
         # save model
         generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
-        discriminator_model.save('saved_models/d_model'+str(epoch)+'.h5')
+        discriminator.save('saved_models/d_model'+str(epoch)+'.h5')
         generator.save('saved_models/g_model'+str(epoch)+'.h5')
 
 
