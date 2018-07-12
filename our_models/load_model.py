@@ -265,7 +265,7 @@ for epoch in range(LAST_EPOCH, LAST_EPOCH+101):
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # save model
-        generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
+        #generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
         discriminator.save('saved_models/d_model'+str(epoch)+'.h5')
         generator.save('saved_models/g_model'+str(epoch)+'.h5')
 
