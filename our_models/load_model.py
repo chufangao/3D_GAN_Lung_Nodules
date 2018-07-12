@@ -46,7 +46,7 @@ TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates 
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
 LAST_EPOCH = 290
 
-def make_generator():
+def make_generator(last_epoch):
     """Creates a generator model that takes a 100-dimensional noise vector as a "seed", and outputs images
     of size 28x28x1."""
     model = keras.models.load_model('saved_models/g_model' + str(LAST_EPOCH) + '.h5')
@@ -69,7 +69,7 @@ def generate_images(generator_model, output_dir, epoch):
     outfile = os.path.join(output_dir, 'epoch_{}.png'.format(epoch))
     tiled_output.save(outfile)
 
-def make_discriminator():
+def make_discriminator(last_epoch):
     """Creates a discriminator model that takes an image as input and outputs a single value, representing whether
     the input is real or generated. Unlike normal GANs, the output is not sigmoid and does not represent a probability!
     Instead, the output should be as large and negative as possible for generated inputs and as large and positive
@@ -166,8 +166,8 @@ x_train = (x_train - halfRange) / halfRange
 
 
 # Now we initialize the generator and discriminator.
-generator = make_generator()
-discriminator = make_discriminator()
+generator = make_generator(LAST_EPOCH)
+discriminator = make_discriminator(LAST_EPOCH)
 
 # The generator_model is used when we want to train the generator layers.
 # As such, we ensure that the discriminator layers are not trainable.
@@ -242,7 +242,8 @@ positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 print('entering training loop')
-for epoch in range(LAST_EPOCH,LAST_EPOCH+101):
+
+for epoch in range(LAST_EPOCH, LAST_EPOCH+101):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
     g_loss = []
