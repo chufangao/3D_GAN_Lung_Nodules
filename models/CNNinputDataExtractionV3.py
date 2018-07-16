@@ -29,10 +29,11 @@ print ("Start")
 slicefail = False
 
 def createSample(listp, dictp, zcenter):
+    # creates a sample from inputbox, imageDict, zcenter
     listToReturn = []
     slicesfound = 0 #for debugging
-    #print ("First item in dict:")
     centerZIndex = None
+    # create volume and list of minz maxz
     if zcenter in dictp:
         centerZIndex = list(dictp.keys()).index(zcenter)
     minZIndex = int(centerZIndex - Zsize/2)
@@ -66,7 +67,7 @@ def CreateTranslatedPositive(listp, dictp, zcenter):
     
     listToReturn = []
     slicesfound = 0 #for debugging
-    #print ("First item in dict:")
+    # check z translate range
     centerZIndex = None
     if zcenter in dictp:
         centerZIndex = list(dictp.keys()).index(zcenter)
@@ -80,21 +81,24 @@ def CreateTranslatedPositive(listp, dictp, zcenter):
     zlist = list(dictp.items())
     minzbound = float(zlist[minZIndex][0])
     maxzbound = float(zlist[maxZIndex][0])
+    # append slices to create volume
     for k in range(minZIndex, maxZIndex):
         value = zlist[k][1]
         part = np.array(value)
         slicewanted = part[listp[0][0]:listp[0][1],listp[1][0]:listp[1][1]]
         listToReturn.append(slicewanted)
+    # return volume, [minz, maxz]
     return (listToReturn, [minzbound, maxzbound])
 
 
 #functions
 def createNegative(listp, dictp, slthick):
-    #listp = exclude_set, dictp = imageDict, slice thickness
-    #print("Negfunction")
+    # listp = exclude_set, dictp = imageDict, slice thickness
     while (True):
+        # get xmin and y min
         xmin = random.randint(0, 512 - Xsize)
         ymin = random.randint(0, 512 - Ysize)
+        # get z from valid zs
         allZs = list(dictp.keys())
         validZs = allZs[int(0 + .5*Zsize) : int(len(allZs) - (.5*Zsize))]
         zcenter = random.choice(validZs)
@@ -104,13 +108,13 @@ def createNegative(listp, dictp, slthick):
             xcoords = box[0]
             ycoords = box[1]
             zcoords = box[2]
-            #print ("Neg Func")
-            #print (zcoords)
+            # check if xmin, ymin, zmin, in range of nodule
             if xmin in range(xcoords[0] - Xsize, xcoords[1]):
                 if ymin in range(ycoords[0] - Ysize, ycoords[1]):
                     if zmin >= zcoords[0] - slthick * Zsize and zmin <= zcoords[1]:
                         intersect = True
-                        break                  
+                        break
+        # if no intersections, add a negative sample
         if (not intersect):
             samplex = [xmin, xmin + Xsize]
             sampley = [ymin, ymin + Ysize]
@@ -128,11 +132,11 @@ x1 = pd.ExcelFile("noduleDimensions.xlsx")
 allNodules = x1.parse(x1.sheet_names[0])
 #allNodules = df[ df["SliceThickness"] <= 2.5] df = df.drop(df[df.score < 50].index)
 allNodules = allNodules.sort_values(['SeriesID'])
-#print(allNodules)
 
 IDs = list(allNodules["SeriesID"].drop_duplicates())
-validation_set = IDs[-120:]
-#print(len(validation_set)); exit()
+validation_set = IDs[-120:-1]
+validation_set.append(IDs[-1])
+#print(sorted(validation_set) == validation_set); exit()
 
 
 nodulesToUse = x1.parse(x1.sheet_names[2])  
@@ -154,18 +158,23 @@ tempdict = None
 imageDict = None
 takeNegativeSample = True
 seriesIDset = set()
-print (len(allNodules))
 counterx = 0
-#iterate thru nodules w/ repetitions of ids
+#print ('val_set index',[list(allNodules['SeriesID']).index(validation_set[i]) for i in range(len(validation_set))])
+#print ('all_set index',[list(allNodules['SeriesID']).index(allNodules['SeriesID'][i]) for i in range(len(list(allNodules['SeriesID'])))])
+# iterate thru nodules w/ repetitions of ids
 for i in range(len(allNodules)):
+    # check slice thickness <= 2.5
     if allNodules["SliceThickness"][i] <= 2.5:
+        #print('st <= 2.5')
         nodeID = allNodules["NoduleID"][i]
         seriesID = allNodules["SeriesID"][i]
         # if seriesID wasn't the last one, and not first element, and we want to take negative samples
         if prevID != seriesID and i != 0 and takeNegativeSample:
             for theta in range(10): #specifies how many negative samples we want per scan
                 counterx += 1
+                # get negative colume and [zmin, zmax]
                 negtoadd, zholder = createNegative(exclude_set, imageDict, slicethickness)
+                # check validity of created volume
                 if (len(negtoadd) == Zsize):
                     negativelist.append(negtoadd)
                 elif len((negtoadd)) == 0:
@@ -175,37 +184,45 @@ for i in range(len(allNodules)):
                     print ("Negsample Size Failed: " + str(prevID) + " was " + str(len(negtoadd)) + " slices")
                     sfailedneglist.append(prevID)   
             
+	# check if in validation set
         if prevID != seriesID:
             if seriesID in validation_set:
-                print ("Validation Series ID: " + str(seriesID)) 
+                print ("Validation Series ID: " + str(seriesID))
+                takeNegativeSample = False
+		#print ('val id found, break', list(allNodules['SeriesID']).index(seriesID))
                 continue
             counter+=1
+            # check seriesID repeat
             if prevID in seriesIDset:
                print ("Repeate Series ID: " + str(prevID)) 
             else:
                 seriesIDset.add(prevID)
+            # print progress 
             if counter % 100 == 0:
-                print (str(counter) + " Done")  
+                print (str(counter) + " Done")
+            # open seriesID pickle file from Data
             filestring = str(seriesID)
             with open(savePath+filestring, "rb") as f:
                 loadedData = pickle.load(f)
             gc.collect()
+            # sort by z, imageDict will Dict w/ keys=z value, values=2d ct scan
             tempdict = loadedData
             imageDict = OrderedDict(sorted(tempdict.items(), key=lambda t: t[0]))
             slicethickness = allNodules["sliceDistances"][i]
             exclude_set = []
+            # take negative example of this nodule
             takeNegativeSample = True
 
-        #now onto pos examples?
+        # processing positive volumes
         prevID = seriesID  
         if nodeID in noduleSet:
-            #then store in data set
+            # then store in data set
             centerX = allNodules["centerX"][i]
             boxX = [centerX-int(.5*Xsize), centerX+int(.5*Xsize)]
             centerY = allNodules["centerY"][i]
             boxY = [centerY-int(.5*Ysize), centerY+int(.5*Ysize)]
             centerZ = allNodules["centerZ"][i]
-            #box [[x1,x2],[y1,y2]]
+            #bdsadasox [[x1,x2],[y1,y2]]
             boxXY = [boxX, boxY]
             postoadd = []
             
@@ -213,11 +230,14 @@ for i in range(len(allNodules)):
                 centerZ *= -1
             if centerZ in imageDict:
                 for w in range(7):
+                    # get volume, [minz, maxz] 
                     postoadd, boxZ = CreateTranslatedPositive(boxXY, imageDict, centerZ)
                     if slicefail:
                         print("Slices out of range: " + str(nodeID))
                         slicefail = False
+                        takeNegativeSample = False
                     elif (len(postoadd) == Zsize):
+                       # else if valid, add augmented versions
                         rnum = random.randint(-2, 0)
                         rnum = rnum * (-1)**random.randint(1, 3)
                         postoadd = np.dstack(postoadd)
@@ -255,15 +275,12 @@ for i in range(len(allNodules)):
                         print ("Possample Size Failed: " + str(nodeID) + " was " + str(len(postoadd)) + " slices")
                         sfailedposlist.append(nodeID)
                         takeNegativeSample = False    
-            
+            # centerz not in imageDict
             else:
                 takeNegativeSample = False
-                pfailedposlist.append(nodeID)
-
-
-                
-        
-        
+                pfailedposlist.append(nodeID) 
+       
+        # add region ro exclude_set so negatives examples don't overlap
         boxX = [allNodules["minimumX"][i], allNodules["maximumX"][i]]
         boxY = [allNodules["minimumY"][i], allNodules["maximumY"][i]]
         boxZ = [allNodules["minimumZ"][i], allNodules["maximumZ"][i]]
@@ -289,8 +306,8 @@ print ("Pos Size fails: " + str(len(sfailedposlist)))
 
 print ("Positive samples: " + str(len(positivelist)))
 print ("Negative samples: " + str(len(negativelist)))
-print (counterx)
-print (counterzeta)
+#print (counterx)
+#print (counterzeta)
 with open(savePath+"PositiveAugmented.pickle", 'wb') as handle:
     pickle.dump(positivelist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
@@ -307,3 +324,8 @@ with open(savePath+"PositiveerrorsAugmented.pickle", 'wb') as handle:
 with open(savePath+"NegativeerrorsAugmented.pickle", 'wb') as handle:
     pickle.dump(pfailedneglist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     pickle.dump(sfailedneglist, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open(savePath+"ValidationIDs4.pickle", 'wb') as handle:
+    pickle.dump(validation_set, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+

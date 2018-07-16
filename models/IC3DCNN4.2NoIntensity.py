@@ -190,7 +190,7 @@ modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.
 
 modelx = return_model()
 
-history = modelx.fit(x_train, y_train, batch_size=60, epochs=50, callbacks=[tbCallBack, modelcheck], validation_data=[x_test, y_test])
+history = modelx.fit(x_train, y_train, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck], validation_data=[x_test, y_test])
 #score = model.evaluate(x_test, y_test, batch_size=32)
 
 def generate_results(y_test, y_score, filename):
