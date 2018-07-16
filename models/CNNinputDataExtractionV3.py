@@ -23,6 +23,7 @@ Zsize = 18
 
 counter = 0
 counterzeta = 0
+savePath = '/home/cc/Data/'
 
 print ("Start")
 slicefail = False
@@ -130,9 +131,9 @@ allNodules = allNodules.sort_values(['SeriesID'])
 #print(allNodules)
 
 IDs = list(allNodules["SeriesID"].drop_duplicates())
-# validation_set = IDs[-120:-1]
-# validation_set.append(IDs[-1])
-validation_set = set()
+validation_set = IDs[-120:]
+#print(len(validation_set)); exit()
+
 
 nodulesToUse = x1.parse(x1.sheet_names[2])  
 noduleSet = set(nodulesToUse["NoduleID"])
@@ -177,7 +178,7 @@ for i in range(len(allNodules)):
         if prevID != seriesID:
             if seriesID in validation_set:
                 print ("Validation Series ID: " + str(seriesID)) 
-                break
+                continue
             counter+=1
             if prevID in seriesIDset:
                print ("Repeate Series ID: " + str(prevID)) 
@@ -186,7 +187,7 @@ for i in range(len(allNodules)):
             if counter % 100 == 0:
                 print (str(counter) + " Done")  
             filestring = str(seriesID)
-            with open(filestring, "rb") as f:
+            with open(savePath+filestring, "rb") as f:
                 loadedData = pickle.load(f)
             gc.collect()
             tempdict = loadedData
@@ -290,19 +291,19 @@ print ("Positive samples: " + str(len(positivelist)))
 print ("Negative samples: " + str(len(negativelist)))
 print (counterx)
 print (counterzeta)
-with open("PositiveAugmented.pickle", 'wb') as handle:
+with open(savePath+"PositiveAugmented.pickle", 'wb') as handle:
     pickle.dump(positivelist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
-with open("NegativeAugmented.pickle", 'wb') as handle:
+with open(savePath+"NegativeAugmented.pickle", 'wb') as handle:
     pickle.dump(negativelist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
-with open("ValidationAugmented.pickle", 'wb') as handle:
+with open(savePath+"ValidationAugmented.pickle", 'wb') as handle:
     pickle.dump(validation_set, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
-with open("PositiveerrorsAugmented.pickle", 'wb') as handle:
+with open(savePath+"PositiveerrorsAugmented.pickle", 'wb') as handle:
     pickle.dump(pfailedposlist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     pickle.dump(sfailedposlist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
-with open("NegativeerrorsAugmented.pickle", 'wb') as handle:
+with open(savePath+"NegativeerrorsAugmented.pickle", 'wb') as handle:
     pickle.dump(pfailedneglist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     pickle.dump(sfailedneglist, handle, protocol=pickle.HIGHEST_PROTOCOL)
