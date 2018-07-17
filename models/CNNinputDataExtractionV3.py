@@ -7,7 +7,15 @@ Created on Mon Jul 24 12:03:55 2017
 
 #Code to make augmented positive and negative examples
 
-
+#CNNinputDataExtractionV3.py
+#Extracts augmented positive and negative subvolumes
+#Requires: dictinaries of images data, nodulDimensions
+#Produces:
+#    - List of 5800 negative subvolumes (10 from each scan, chosen randomly)
+#    - List of 5425 positive subvolumes (7 per nodule - translated, rotated, and reflected)
+#    - List of Series IDs set aside for validation
+#    - List of nodules where the coordinate could not be found in the image dictionary
+#    - List of series IDs where a nodule coordinate couldn’t be found in the image dictionary
 import pickle
 import gc
 import pandas as pd
