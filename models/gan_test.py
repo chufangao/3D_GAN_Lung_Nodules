@@ -143,7 +143,8 @@ class GAN():
             # loss_over_time.append([d_loss[0], g_loss])
             # If at save interval => save generated image samples
             if epoch % sample_interval == 0:
-                self.sample_images(epoch)
+                pass
+		#self.sample_images(epoch)
                 # np.savetxt("foo.csv", np.asarray(loss_over_time), delimiter=',')
 
     def sample_images(self, epoch):

@@ -99,7 +99,7 @@ cutoff = 4606
 loadedpos = None
 top_threshold = 2446
 bottom_threshold = -1434
-with open("PositiveAugmented.pickle", "rb") as f:
+with open("/home/cc/Data/PositiveAugmented.pickle", "rb") as f:
     print("fine")
     loadedpos = pickle.load(f)
 #for i in range(len(loadedpos)):
@@ -121,7 +121,7 @@ valpos = valpos.reshape(valpos.shape[0], x, y, z, 1)
 del loadedpos
 
 loadedneg = None
-with open("NegativeAugmented.pickle", "rb") as f:
+with open("/home/cc/Data/NegativeAugmented.pickle", "rb") as f:
     print("fine")
     loadedneg = pickle.load(f)
 #for i in range(len(loadedneg)):
@@ -190,7 +190,7 @@ modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.
 
 modelx = return_model()
 
-history = modelx.fit(x_train, y_train, batch_size=60, epochs=50, callbacks=[tbCallBack, modelcheck], validation_data=[x_test, y_test])
+history = modelx.fit(x_train, y_train, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck], validation_data=[x_test, y_test])
 #score = model.evaluate(x_test, y_test, batch_size=32)
 
 def generate_results(y_test, y_score, filename):
