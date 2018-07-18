@@ -64,7 +64,10 @@ generate_quantity = 500
 # how many times we want to do it
 augmentation_iterations = 3
 #the file containing the model for generating new training data
-generator_file = 'g_model100.h5'
+generator_file = 'saved_models/g_model1920.h5'
+
+#the directory for saving models
+target_directory = 'saved_models' 
 
 def return_model(n = 5, drop_rate_conv = 0.09 , drop_rate_FC = 0.56, learn_rate = 0.00024, num_nodes = 64):
     model = Sequential()
@@ -206,7 +209,7 @@ modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.
 modelx = return_model()
 
 history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck], validation_data=[test_data, test_label])
-modelx.save('classifier_model_0-aug.h5')
+modelx.save(target_directory+'classifier_model_0-aug.h5')
 #score = model.evaluate(x_test, y_test, batch_size=32)
 
 y_score = modelx.predict(test_data)
@@ -224,7 +227,7 @@ for i in range(augmentation_iterations):
 
     history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck],
                          validation_data=[test_data, test_label])
-    modelx.save('classifier_model_'+str((1+i)*generate_quantity)+'-aug.h5')
+    modelx.save(target_directory+'classifier_model_'+str((1+i)*generate_quantity)+'-aug.h5')
     # score = model.evaluate(x_test, y_test, batch_size=32)
 
     y_score = modelx.predict(test_data)
