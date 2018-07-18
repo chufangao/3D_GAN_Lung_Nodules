@@ -44,7 +44,7 @@ except ImportError:
 BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LAST_EPOCH = 460
+LAST_EPOCH = 0
 
 def make_generator(last_epoch):
     """Creates a generator model that takes a 100-dimensional noise vector as a "seed", and outputs images

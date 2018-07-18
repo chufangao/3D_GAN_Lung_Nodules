@@ -18,7 +18,6 @@ The model saves images using pillow. If you don't have pillow, either install it
 import argparse
 import os
 import numpy as np
-import keras
 from keras.models import Model, Sequential
 from keras.layers import Input, Dense, Reshape, Flatten
 from keras.layers.merge import _Merge
@@ -33,7 +32,7 @@ import pickle
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+import sys
 
 try:
     from PIL import Image
@@ -41,16 +40,42 @@ except ImportError:
     print('This script depends on pillow! Please install it (e.g. with pip install pillow)')
     exit()
 
-BATCH_SIZE = 64
+#usage
+# .py load gen.h5 disc.h5
+
+BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LAST_EPOCH = 1190
-LATENTDIM = 150
+LATENTDIM = 1000
 
-def make_generator(last_epoch):
-    """Creates a generator model that takes a 100-dimensional noise vector as a "seed", and outputs images
-    of size 28x28x1."""
-    model = keras.models.load_model('saved_models/g_model_no_fc' + str(LAST_EPOCH) + '.h5')
+def make_generator():
+    if len(sys.argv) > 1 and sys.argv[1] == 'load':
+        return keras.models.load_model(sys.argv[2])
+    model = Sequential()
+    model.add(Dense(1024, input_dim=LATENTDIM))
+    model.add(LeakyReLU())
+    model.add(Dense(128 * 10 * 10 * 9, input_dim=LATENTDIM))
+    model.add(BatchNormalization())
+    model.add(LeakyReLU())
+    if K.image_data_format() == 'channels_first':
+        model.add(Reshape((128, 10, 10, 9), input_shape=(128 * 10 * 10 * 9,)))
+        bn_axis = 1
+    else:
+        model.add(Reshape((10, 10, 9, 128), input_shape=(128 * 10 * 10 * 9,)))
+        bn_axis = -1
+    model.add(UpSampling3D(size=(2, 2, 2)))
+    model.add(BatchNormalization(axis=bn_axis))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(64, (5, 5, 3), padding='same'))
+    model.add(BatchNormalization(axis=bn_axis))
+    model.add(LeakyReLU())
+    model.add(UpSampling3D(size=(2, 2, 1)))
+    model.add(BatchNormalization(axis=bn_axis))
+    model.add(LeakyReLU())
+    # Because we normalized training inputs to lie in the range [-1, 1],
+    # the tanh function should be used for the output of the generator to ensure its output
+    # also lies in this range.
+    model.add(Convolution3D(1, (5, 5, 3), padding='same', activation='tanh'))
     return model
 
 def tile_images(image_stack):
@@ -62,7 +87,7 @@ def tile_images(image_stack):
 
 def generate_images(generator_model, output_dir, epoch):
     """Feeds random seeds into the generator and tiles and saves the output to a PNG file."""
-    test_image_stack = generator_model.predict(np.random.rand(10, 150))
+    test_image_stack = generator_model.predict(np.random.rand(10, LATENTDIM))
     test_image_stack = (test_image_stack * 127.5) + 127.5
     test_image_stack = np.squeeze(np.round(test_image_stack).astype(np.uint8))
     tiled_output = tile_images(test_image_stack)
@@ -70,14 +95,30 @@ def generate_images(generator_model, output_dir, epoch):
     outfile = os.path.join(output_dir, 'epoch_{}.png'.format(epoch))
     tiled_output.save(outfile)
 
-def make_discriminator(last_epoch):
+def make_discriminator():
+    if len(sys.argv) > 1 and sys.argv[1] == 'load':
+        return keras.models.load_model(sys.argv[3])
+
     """Creates a discriminator model that takes an image as input and outputs a single value, representing whether
     the input is real or generated. Unlike normal GANs, the output is not sigmoid and does not represent a probability!
     Instead, the output should be as large and negative as possible for generated inputs and as large and positive
     as possible for real inputs.
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
-    model = keras.models.load_model('saved_models/d_model_no_fc' + str(LAST_EPOCH) + '.h5')
+    model = Sequential()
+    if K.image_data_format() == 'channels_first':
+        model.add(Convolution3D(64, (5, 5, 5), padding='same', input_shape=(1, 40, 40, 18)))
+    else:
+        model.add(Convolution3D(64, (5, 5, 5), padding='same', input_shape=(40, 40, 18, 1)))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(128, (5, 5, 5), kernel_initializer='he_normal', strides=[2, 2, 1], padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(128, (5, 5, 5), kernel_initializer='he_normal', padding='same', strides=[2, 2, 2]))
+    model.add(LeakyReLU())
+    model.add(Flatten())
+    #model.add(Dense(1024, kernel_initializer='he_normal'))
+    #model.add(LeakyReLU())
+    model.add(Dense(1, kernel_initializer='he_normal'))
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):
@@ -139,18 +180,7 @@ class RandomWeightedAverage(_Merge):
         weights = K.random_uniform((BATCH_SIZE, 1, 1, 1, 1))
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
-#gen = make_generator()
-#input = Input(shape=(100,))
-#layers = gen(input)
-#model = Model(inputs = [input], outputs = [layers])
-#model.compile(optimizer=Adam(), loss=wasserstein_loss)
-#model.layers[1].summary()
-#out = model.predict(np.random.rand(10, 100))
-#print(out.shape)
-# crit = make_discriminator()
-# crit.summary()
-
-#load the data for training the WGAN-GP and convert it into an ndarray
+#load the data for training the WGAN-GP and convert it into an ndarray, normalize
 x_train = None
 with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
@@ -167,8 +197,8 @@ x_train = (x_train - halfRange) / halfRange
 
 
 # Now we initialize the generator and discriminator.
-generator = make_generator(LAST_EPOCH)
-discriminator = make_discriminator(LAST_EPOCH)
+generator = make_generator()
+discriminator = make_discriminator()
 
 # The generator_model is used when we want to train the generator layers.
 # As such, we ensure that the discriminator layers are not trainable.
@@ -178,7 +208,7 @@ discriminator = make_discriminator(LAST_EPOCH)
 for layer in discriminator.layers:
     layer.trainable = False
 discriminator.trainable = False
-generator_input = Input(shape=(150,))
+generator_input = Input(shape=(LATENTDIM,))
 generator_layers = generator(generator_input)
 discriminator_layers_for_generator = discriminator(generator_layers)
 generator_model = Model(inputs=[generator_input], outputs=[discriminator_layers_for_generator])
@@ -198,7 +228,7 @@ generator.trainable = False
 # are then run through the discriminator. Although we could concatenate the real and generated images into a
 # single tensor, we don't (see model compilation for why).
 real_samples = Input(shape=x_train.shape[1:])
-generator_input_for_discriminator = Input(shape=(150,))
+generator_input_for_discriminator = Input(shape=(LATENTDIM,))
 generated_samples_for_discriminator = generator(generator_input_for_discriminator)
 discriminator_output_from_generator = discriminator(generated_samples_for_discriminator)
 discriminator_output_from_real_samples = discriminator(real_samples)
@@ -242,10 +272,12 @@ discriminator_model.compile(optimizer=Adam(0.0001, beta_1=0.5, beta_2=0.9),
 positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
-print('entering training loop')
 
-for epoch in range(LAST_EPOCH, LAST_EPOCH+10001):
-    the_noise = np.random.normal(0, 1, (BATCH_SIZE, 150))
+# make an alt variable for saving purposes so we don't run out of space
+alt = 0
+print('entering training loop')
+for epoch in range(10001):
+    the_noise = np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))
     d_loss = []
     g_loss = []
 
@@ -255,45 +287,17 @@ for epoch in range(LAST_EPOCH, LAST_EPOCH+10001):
         image_batch = x_train[batch_indices]
         d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
 
-    g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 150), positive_y)
+    g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, LATENTDIM), positive_y)
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:
         # save images
-        noise = np.random.normal(0, 1, (BATCH_SIZE, 150))
+        noise = np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))
         the_fakes = generator.predict(the_noise)
-        with open('/home/cc/deep_learning_reu/images/test_no_fc'+str(epoch)+'.pickle', 'wb') as handle:
+        with open('gen_nod'+str(alt)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
         # save model
-        #generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
-        discriminator.save('saved_models/d_model_no_fc'+str(epoch)+'.h5')
-        generator.save('saved_models/g_model_no_fc'+str(epoch)+'.h5')
+        discriminator.save('d'+str(alt)+'.h5')
+        generator.save('g'+str(alt)+'.h5')
+        alt = 1 - alt
 
-
-
-    # np.random.shuffle(x_train)
-    # print("Epoch: ", epoch)
-    # print("Number of batches: ", int(x_train.shape[0] // BATCH_SIZE))
-    # discriminator_loss = []
-    # generator_loss = []
-    # # minibatches_size = BATCH_SIZE * TRAINING_RATIO
-    # for i in range(int(x_train.shape[0] // (minibatches_size))): #i iterates through the minibatches
-    #
-    #     # discriminator_minibatches = x_train[i * minibatches_size:(i + 1) * minibatches_size]
-    #     for j in range(TRAINING_RATIO):
-    #         image_batch = x_train[np.random.randint(0, x_train.shape[0], BATCH_SIZE)]
-    #         noise = np.random.rand(BATCH_SIZE, 100).astype(np.float32)
-    #         discriminator_loss.append(discriminator_model.train_on_batch([image_batch, noise],
-    #                                                                      [positive_y, negative_y, dummy_y]))
-    #     generator_loss.append(generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y))
-    #
-    # if epoch % 10 == 0:
-    #     noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
-    #     the_fakes = generator.predict(the_noise)
-    #     with open('../images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
-    #         pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-    # Still needs some code to display losses from the generator and discriminator, progress bars, etc.
-    # generate_images(generator, args.output_dir, epoch)
