@@ -1,25 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9b8470e6-03dd-4b51-85f1-751d6a25a768" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/test0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test10.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test11.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test12.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test13.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test14.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test15.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test16.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test17.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test9.png" beforeDir="false" />
+    <list default="true" id="9b8470e6-03dd-4b51-85f1-751d6a25a768" name="Default" comment="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,29 +15,7 @@
     <favorites_list name="deep_learning_reu" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="3d_wgan_gp2.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="293" column="7" lean-forward="true" selection-start-line="293" selection-start-column="7" selection-end-line="293" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="load_model.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/our_models/load_model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4165">
-              <caret line="245" column="31" selection-start-line="245" selection-start-column="31" selection-end-line="245" selection-end-column="31" />
-              <folding>
-                <element signature="e#1223#1238#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -88,7 +49,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="newbranch" />
+        <entry key="$PROJECT_DIR$" value="9da0f4f7da9d27e54032c6fb7bd4148205764cce" />
       </map>
     </option>
   </component>
@@ -103,9 +64,9 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/our_models/3d_wgan_gp.py" />
         <option value="$PROJECT_DIR$/models/wgan_gp_test.py" />
-        <option value="$PROJECT_DIR$/our_models/3d_wgan_gp2.py" />
         <option value="$PROJECT_DIR$/our_models/load_model.py" />
         <option value="$PROJECT_DIR$/showimages.py" />
+        <option value="$PROJECT_DIR$/our_models/3d_wgan_gp2.py" />
       </list>
     </option>
   </component>
@@ -129,7 +90,7 @@
             <path>
               <item name="deep_learning_reu" type="b2602c69:ProjectViewProjectNode" />
               <item name="deep_learning_reu" type="462c0819:PsiDirectoryNode" />
-              <item name="our_models" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -144,12 +105,12 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\models\images" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\our_models" />
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\models\images" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -411,19 +372,25 @@
       <option name="project" value="LOCAL" />
       <updated>1531405988459</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <created>1531408158120</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1531408158120</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="960" y="0" width="960" height="1040" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.4992272" visible="true" weight="0.2777778" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.4992272" visible="true" weight="0.2777778" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="right" id="R Graphics" order="4" weight="0.32995737" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.4722222" side_tool="true" weight="0.32890365" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.5277778" visible="true" weight="0.32890365" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.5277778" visible="true" weight="0.32890365" />
       <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.4977778" weight="0.358804" />
       <window_info anchor="bottom" id="Run" order="5" sideWeight="0.4977778" weight="0.28349945" />
       <window_info id="Structure" order="0" sideWeight="0.50165015" side_tool="true" weight="0.27222222" />
@@ -730,20 +697,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/our_models/load_model.py">
+    <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4165">
-          <caret line="245" column="31" selection-start-line="245" selection-start-column="31" selection-end-line="245" selection-end-column="31" />
-          <folding>
-            <element signature="e#1223#1238#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="663">
+          <caret line="289" column="41" lean-forward="true" selection-start-line="289" selection-start-column="41" selection-end-line="289" selection-end-column="41" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
+    <entry file="file://$PROJECT_DIR$/our_models/load_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="293" column="7" lean-forward="true" selection-start-line="293" selection-start-column="7" selection-end-line="293" selection-end-column="7" />
+        <state relative-caret-position="17">
+          <caret line="246" column="31" selection-start-line="246" selection-start-column="31" selection-end-line="246" selection-end-column="31" />
+          <folding>
+            <element signature="e#1223#1238#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
