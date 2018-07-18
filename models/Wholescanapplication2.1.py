@@ -38,11 +38,11 @@ random.seed(10)
 start_time = time.time()
 print("--- %s seconds ---" % (time.time() - start_time))
 
-modelfile = '4.2weights.00-0.46.hdf5'
+modelfile = '4.2weights.17-0.04.hdf5'
 modelx = keras.models.load_model(modelfile)
 
 #setup
-
+savepath = '/home/cc/Data/'
 Xsize = 40
 Ysize = 40
 Zsize = 18
@@ -62,16 +62,16 @@ sensitivities = []
 fakeSensitivities = []
 
 noduleBoxes = None
-with open("noduleBoxes.pickle", "rb") as f:
+with open(savepath+"noduleBoxes.pickle", "rb") as f:
     noduleBoxes = pickle.load(f)
 fakeNoduleBoxes = None
-with open("fakeNoduleBoxes.pickle", "rb") as f:
+with open(savepath+"fakeNoduleBoxes.pickle", "rb") as f:
     fakeNoduleBoxes = pickle.load(f)
 sliceList = None
-with open("sliceamount.pickle", "rb") as f:
+with open(savepath+"sliceamount.pickle", "rb") as f:
     sliceList = pickle.load(f)    
 valSeries = None
-with open("workingValidationSeries.pickle", "rb") as f:
+with open(savepath+"workingValidationSeries.pickle", "rb") as f:
     valSeries = pickle.load(f)
 numScans = len(valSeries)
 
@@ -102,7 +102,7 @@ for seriesID in valSeries:
     counterx += 1
     print ("File: " + str(counterx))
     inputs = None
-    with open("ValClipped" + seriesID + ".pickle", 'rb') as f:
+    with open(savepath+"ValClipped" + seriesID + ".pickle", 'rb') as f:
         inputs = pickle.load(f)
     inputs = np.array(inputs)
     inputs = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)
@@ -166,21 +166,21 @@ FPratesAdj = [(a / c) * b / numScans for a, b, c in zip(numDetected, sumofFPs, s
 fakeSensitivities = [((a + b) * 1.0) / (numNodules + numFakes) for a, b in zip(numDetected, numFakesDetected)]
 
 
-with open("sensitivities1.pickle", 'wb') as handle:
+with open(savepath+"sensitivities1.pickle", 'wb') as handle:
     pickle.dump(sensitivities, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open("FPrates1.pickle", 'wb') as handle:
+with open(savepath+"FPrates1.pickle", 'wb') as handle:
     pickle.dump(FPrates, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open("FPratesAdj1.pickle", 'wb') as handle:
+with open(savepath+"FPratesAdj1.pickle", 'wb') as handle:
     pickle.dump(FPratesAdj, handle, protocol=pickle.HIGHEST_PROTOCOL)    
-with open("fakeSensitivities1.pickle", 'wb') as handle:
+with open(savepath+"fakeSensitivities1.pickle", 'wb') as handle:
     pickle.dump(fakeSensitivities, handle, protocol=pickle.HIGHEST_PROTOCOL)  
-with open("sumofTPs1.pickle", 'wb') as handle:
+with open(savepath+"sumofTPs1.pickle", 'wb') as handle:
     pickle.dump(sumofTPs, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open("sumofFPs1.pickle", 'wb') as handle:
+with open(savepath+"sumofFPs1.pickle", 'wb') as handle:
     pickle.dump(sumofFPs, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open("numDetected1.pickle", 'wb') as handle:
+with open(savepath+"numDetected1.pickle", 'wb') as handle:
     pickle.dump(numDetected, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open("numFakesDetected1.pickle", 'wb') as handle:
+with open(savepath+"numFakesDetected1.pickle", 'wb') as handle:
     pickle.dump(numFakesDetected, handle, protocol=pickle.HIGHEST_PROTOCOL)             
 #plot line graph of FPrates vs sensitivities
 #idk if this will actually work, it's modified from a stack overflow post

@@ -48,7 +48,7 @@ counterFile = 0
 sliceamounts = []
 
 def createInput(listp, dictp):
-    # create input 
+    # create input(box, imageDict) returns volume wrt box
     listToReturn = []
     minZIndex = listp[2][0]
     maxZIndex = listp[2][1]
@@ -99,6 +99,7 @@ validIDs = set(allNodules[allNodules["SliceThickness"] <= 2.5]["SeriesID"])
 
 Xlow = 0
 Xhigh = Xsize
+# create boxy and boxys to cut region
 while Xhigh < 512:
     allboxXs.append([Xlow, Xhigh])
     allboxYs.append([Xlow, Xhigh])
@@ -119,7 +120,6 @@ for seriesID in seriesIDs:
         imageDict = OrderedDict(sorted(tempdict.items(), key=lambda t: t[0]))
 
         # threshold the images
-        '''
         for z in imageDict:
             for j in range(len(imageDict[z])):
                 for k in range(len(imageDict[z][j])):
@@ -127,7 +127,6 @@ for seriesID in seriesIDs:
                         imageDict[z][j][k] = top_threshold
                     if imageDict[z][j][k] < bottom_threshold:
                         imageDict[z][j][k] = bottom_threshold
-        '''
         testlist = []
         # get all nodules whos series id match validation seriesid
         seriesNodules = allNodules[allNodules["SeriesID"] == seriesID]
@@ -139,7 +138,8 @@ for seriesID in seriesIDs:
             noduleDict[seriesID][node] = []
         for node in fakeNodules:
             fakeNoduleDict[seriesID][node] = []
-        
+       
+        # prepare z borders
         Zlow = 0
         Zhigh = Zsize
         while Zhigh < len(imageDict):
@@ -152,8 +152,9 @@ for seriesID in seriesIDs:
             for boxY in allboxYs:
                 for boxX in allboxXs:
                     box = [boxX, boxY, boxZ]
+                    # append colume to testlist
                     testlist.append(createInput(box, imageDict))
-                    
+                    # append box region to respective dataset
                     for nodeID in nodules:
                         checkedint = checkIntersect(nodeID, box, imageDict)
                         if checkedint == 1:
