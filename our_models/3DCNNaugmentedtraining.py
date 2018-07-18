@@ -66,7 +66,7 @@ generate_quantity = 500
 # how many times we want to do it
 augmentation_iterations = 3
 #the file containing the model for generating new training data
-generator_file = 'saved_models/g_model1920.h5'
+generator_file = 'saved_models/g_model330.h5'
 
 #the directory for saving models
 target_directory = 'saved_models/'
@@ -116,7 +116,7 @@ def generate_results(y_test, y_score, filename):
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic curve')
-    plt.savefig('ROC' + filename + '.png')
+    plt.savefig(target_directory+'ROC' + filename + '.png')
     print('AUC: %f' % roc_auc)
     with open(target_directory+'AUC' + filename + '.txt', 'w') as f:
         f.write('ROC CURVE: %f' % roc_auc)
@@ -125,10 +125,18 @@ def generate_results(y_test, y_score, filename):
 #use a file to a instantiate a model for generating new training examples
 def load_generator():
     g_model = keras.models.load_model(generator_file)
-    g_input = Input(shape=(100,))
-    g_layers = g_model(g_input)
-    g_compiled = Model.compile(inputs=[g_input], outputs=[g_layers])
-    return g_compiled
+    #g_input = Input(shape=(100,))
+    #g_layers = g_model(g_input)
+    #g_compiled = Model.compile(inputs=[g_input], outputs=[g_layers])
+    #return g_compiled
+    return g_model
+
+def denormalize_img(normalized_image):
+    rval = normalized_image
+    rval *= 1940
+    rval += 506
+    return rval
+
 
 #dataloading
 cutoff = 4606
@@ -220,13 +228,17 @@ if control_group:
 
 example_generator = load_generator()
 for i in range(augmentation_iterations):
-    the_noise = np.random.normal(0,1,(100, generate_quantity))
+    the_noise = np.random.normal(0,1,(generate_quantity, 100))
     new_train_data = example_generator.predict(the_noise)
+    new_train_data = denormalize_img(new_train_data)
     new_train_label = []
     for j in range(len(new_train_data)):
         new_train_label.append([1,0])
-    train_data = np.concatenate(train_data, new_train_data)
-    train_label = np.concatenate(train_label, new_train_label)
+    print('train_data type:'+str(type(train_data))+'; new_train_data type: '+str(type(new_train_data)))
+    print(train_data.shape)
+    print(new_train_data.shape)
+    train_data = np.concatenate((train_data, new_train_data), 0)
+    train_label = np.concatenate((train_label, new_train_label))
 
     modelx = return_model()
     history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck],

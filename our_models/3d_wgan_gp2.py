@@ -271,7 +271,7 @@ discriminator_model.compile(optimizer=Adam(0.0001, beta_1=0.5, beta_2=0.9),
 positive_y = np.ones((BATCH_SIZE, 1), dtype=np.float32)
 negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
-
+alt = 0
 for epoch in range(101):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
@@ -288,13 +288,13 @@ for epoch in range(101):
     if epoch % 10 == 0:
         noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
         the_fakes = generator.predict(the_noise)
-        with open('../images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
+        with open('../images/generated_nodules'+str(alt)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
         # save model
         #generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
-        discriminator.save('saved_models/d_model'+str(epoch)+'.h5')
-        generator.save('saved_models/g_model'+str(epoch)+'.h5')
-
+        discriminator.save('saved_models/d_model'+str(alt)+'.h5')
+        generator.save('saved_models/g_model'+str(alt)+'.h5')
+        alt = 1-alt
 
     # np.random.shuffle(x_train)
     # print("Epoch: ", epoch)

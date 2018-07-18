@@ -44,7 +44,7 @@ except ImportError:
 BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LAST_EPOCH = 220
+LAST_EPOCH = 460
 
 def make_generator(last_epoch):
     """Creates a generator model that takes a 100-dimensional noise vector as a "seed", and outputs images
@@ -243,6 +243,7 @@ negative_y = -positive_y
 dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 print('entering training loop')
 
+alt = 0
 for epoch in range(LAST_EPOCH, LAST_EPOCH+10001):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
     d_loss = []
@@ -257,18 +258,18 @@ for epoch in range(LAST_EPOCH, LAST_EPOCH+10001):
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
-    if epoch % 10 == 0:
+    if epoch % 50 == 0:
         # save images
         noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
         the_fakes = generator.predict(the_noise)
-        with open('/home/cc/deep_learning_reu/images/generated_nodules'+str(epoch)+'.pickle', 'wb') as handle:
-            pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+        with open('/home/cc/deep_learning_reu/images/generated_nodules'+str(alt)+'.pickle', 'wb') as handle:
+            pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
         # save model
         #generator_model.save('saved_models/combined_model'+str(epoch)+'.h5')
-        discriminator.save('saved_models/d_model'+str(epoch)+'.h5')
-        generator.save('saved_models/g_model'+str(epoch)+'.h5')
-
+        discriminator.save('saved_models/d_model'+str(alt)+'.h5')
+        generator.save('saved_models/g_model'+str(alt)+'.h5')
+        alt = 1-alt
 
 
     # np.random.shuffle(x_train)

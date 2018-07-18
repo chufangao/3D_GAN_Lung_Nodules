@@ -38,7 +38,7 @@ random.seed(10)
 start_time = time.time()
 print("--- %s seconds ---" % (time.time() - start_time))
 
-modelfile = '4.2weights.17-0.04.hdf5'
+modelfile = '/home/cc/deep_learning_reu/our_models/saved_models/classifier_model_500-aug.h5'
 modelx = keras.models.load_model(modelfile)
 
 #setup
@@ -166,21 +166,21 @@ FPratesAdj = [(a / c) * b / numScans for a, b, c in zip(numDetected, sumofFPs, s
 fakeSensitivities = [((a + b) * 1.0) / (numNodules + numFakes) for a, b in zip(numDetected, numFakesDetected)]
 
 
-with open(savepath+"sensitivities1.pickle", 'wb') as handle:
+with open(savepath+"aug_sensitivities1.pickle", 'wb') as handle:
     pickle.dump(sensitivities, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open(savepath+"FPrates1.pickle", 'wb') as handle:
+with open(savepath+"aug_FPrates1.pickle", 'wb') as handle:
     pickle.dump(FPrates, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open(savepath+"FPratesAdj1.pickle", 'wb') as handle:
+with open(savepath+"aug_FPratesAdj1.pickle", 'wb') as handle:
     pickle.dump(FPratesAdj, handle, protocol=pickle.HIGHEST_PROTOCOL)    
-with open(savepath+"fakeSensitivities1.pickle", 'wb') as handle:
+with open(savepath+"aug_fakeSensitivities1.pickle", 'wb') as handle:
     pickle.dump(fakeSensitivities, handle, protocol=pickle.HIGHEST_PROTOCOL)  
-with open(savepath+"sumofTPs1.pickle", 'wb') as handle:
+with open(savepath+"aug_sumofTPs1.pickle", 'wb') as handle:
     pickle.dump(sumofTPs, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open(savepath+"sumofFPs1.pickle", 'wb') as handle:
+with open(savepath+"aug_sumofFPs1.pickle", 'wb') as handle:
     pickle.dump(sumofFPs, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open(savepath+"numDetected1.pickle", 'wb') as handle:
+with open(savepath+"aug_numDetected1.pickle", 'wb') as handle:
     pickle.dump(numDetected, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open(savepath+"numFakesDetected1.pickle", 'wb') as handle:
+with open(savepath+"aug_numFakesDetected1.pickle", 'wb') as handle:
     pickle.dump(numFakesDetected, handle, protocol=pickle.HIGHEST_PROTOCOL)             
 #plot line graph of FPrates vs sensitivities
 #idk if this will actually work, it's modified from a stack overflow post
@@ -193,7 +193,7 @@ plt.title("FROC Curve, Certain Nodules", fontsize = 24)
 plt.ylim([0,1])
 plt.tick_params(labelsize = 12)
 
-plt.savefig('FROC_plot1.png')            
+plt.savefig('aug_FROC_plot1.png')            
 
 
 plt.gcf().clear()
@@ -204,7 +204,7 @@ plt.title("FROC Curve, Certain Nodules", fontsize = 24)
 plt.ylim([0,1])
 plt.tick_params(labelsize = 12)
 
-plt.savefig('FROC_plotAdj1.png')
+plt.savefig('aug_FROC_plotAdj1.png')
 
             
 plt.gcf().clear()
@@ -215,4 +215,4 @@ plt.title("FROC Curve, All Nodules", fontsize = 24)
 plt.ylim([0,1])
 plt.tick_params(labelsize = 12)
 
-plt.savefig('FROC_plot21.png')         
+plt.savefig('aug_FROC_plot21.png')         
