@@ -44,12 +44,13 @@ except ImportError:
 BATCH_SIZE = 64
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LAST_EPOCH = 60
+LAST_EPOCH = 1190
+LATENTDIM = 150
 
 def make_generator(last_epoch):
     """Creates a generator model that takes a 100-dimensional noise vector as a "seed", and outputs images
     of size 28x28x1."""
-    model = keras.models.load_model('saved_models/g_model' + str(LAST_EPOCH) + '.h5')
+    model = keras.models.load_model('saved_models/g_model_no_fc' + str(LAST_EPOCH) + '.h5')
     return model
 
 def tile_images(image_stack):
@@ -61,7 +62,7 @@ def tile_images(image_stack):
 
 def generate_images(generator_model, output_dir, epoch):
     """Feeds random seeds into the generator and tiles and saves the output to a PNG file."""
-    test_image_stack = generator_model.predict(np.random.rand(10, 100))
+    test_image_stack = generator_model.predict(np.random.rand(10, 150))
     test_image_stack = (test_image_stack * 127.5) + 127.5
     test_image_stack = np.squeeze(np.round(test_image_stack).astype(np.uint8))
     tiled_output = tile_images(test_image_stack)
@@ -76,7 +77,7 @@ def make_discriminator(last_epoch):
     as possible for real inputs.
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
-    model = keras.models.load_model('saved_models/d_model' + str(LAST_EPOCH) + '.h5')
+    model = keras.models.load_model('saved_models/d_model_no_fc' + str(LAST_EPOCH) + '.h5')
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):
@@ -177,7 +178,7 @@ discriminator = make_discriminator(LAST_EPOCH)
 for layer in discriminator.layers:
     layer.trainable = False
 discriminator.trainable = False
-generator_input = Input(shape=(100,))
+generator_input = Input(shape=(150,))
 generator_layers = generator(generator_input)
 discriminator_layers_for_generator = discriminator(generator_layers)
 generator_model = Model(inputs=[generator_input], outputs=[discriminator_layers_for_generator])
@@ -197,7 +198,7 @@ generator.trainable = False
 # are then run through the discriminator. Although we could concatenate the real and generated images into a
 # single tensor, we don't (see model compilation for why).
 real_samples = Input(shape=x_train.shape[1:])
-generator_input_for_discriminator = Input(shape=(100,))
+generator_input_for_discriminator = Input(shape=(150,))
 generated_samples_for_discriminator = generator(generator_input_for_discriminator)
 discriminator_output_from_generator = discriminator(generated_samples_for_discriminator)
 discriminator_output_from_real_samples = discriminator(real_samples)
@@ -244,7 +245,7 @@ dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 print('entering training loop')
 
 for epoch in range(LAST_EPOCH, LAST_EPOCH+10001):
-    the_noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
+    the_noise = np.random.normal(0, 1, (BATCH_SIZE, 150))
     d_loss = []
     g_loss = []
 
@@ -254,12 +255,12 @@ for epoch in range(LAST_EPOCH, LAST_EPOCH+10001):
         image_batch = x_train[batch_indices]
         d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
 
-    g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 100), positive_y)
+    g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, 150), positive_y)
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
     if epoch % 10 == 0:
         # save images
-        noise = np.random.normal(0, 1, (BATCH_SIZE, 100))
+        noise = np.random.normal(0, 1, (BATCH_SIZE, 150))
         the_fakes = generator.predict(the_noise)
         with open('/home/cc/deep_learning_reu/images/test_no_fc'+str(epoch)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
