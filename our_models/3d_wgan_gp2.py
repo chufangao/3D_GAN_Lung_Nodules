@@ -29,6 +29,9 @@ from keras.datasets import mnist
 from keras import backend as K
 from functools import partial
 import pickle
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 
 try:
     from PIL import Image
@@ -184,12 +187,14 @@ print(out.shape)
 x_train = None
 with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
-x_train = np.asarray(x_train)
-x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
-#halfRange = (np.max(x_train) - np.min(x_train))/2.0
-#x_train = (x_train - halfRange) / halfRange
-#print(np.max(x_train), np.min(x_train)); exit()
-
+    x_train = np.asarray(x_train)
+    x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
+    minx = np.amin(x_train)
+    halfRange = (np.amax(x_train) - minx)/2.0
+    if minx < 0:
+        x_train -= minx
+    x_train = (x_train - halfRange) / halfRange
+plt.imsave('test.png',.5*x_train[0,:,:,0,0]+.5)
 # Now we initialize the generator and discriminator.
 generator = make_generator()
 discriminator = make_discriminator()
