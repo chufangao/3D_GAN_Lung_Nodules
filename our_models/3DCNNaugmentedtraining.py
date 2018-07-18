@@ -59,12 +59,16 @@ y = 40
 z = 18
 grayscale = 1
 
+#true if a model should be trained without augmented data
+control_group = False
 # how many examples we want to generate at a time
 generate_quantity = 500
 # how many times we want to do it
 augmentation_iterations = 3
 #the file containing the model for generating new training data
 generator_file = 'g_model100.h5'
+
+
 
 def return_model(n = 5, drop_rate_conv = 0.09 , drop_rate_FC = 0.56, learn_rate = 0.00024, num_nodes = 64):
     model = Sequential()
@@ -203,14 +207,15 @@ test_label = np.array(test_label)
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)     
 modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 
-modelx = return_model()
+if control_group:
+    modelx = return_model()
 
-history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck], validation_data=[test_data, test_label])
-modelx.save('classifier_model_0-aug.h5')
-#score = model.evaluate(x_test, y_test, batch_size=32)
+    history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck], validation_data=[test_data, test_label])
+    modelx.save('classifier_model_0-aug.h5')
+    #score = model.evaluate(x_test, y_test, batch_size=32)
 
-y_score = modelx.predict(test_data)
-generate_results(test_label[:, 0], y_score[:, 0], '13I')
+    y_score = modelx.predict(test_data)
+    generate_results(test_label[:, 0], y_score[:, 0], '13I_control')
 
 example_generator = load_generator()
 for i in range(augmentation_iterations):
@@ -222,13 +227,14 @@ for i in range(augmentation_iterations):
     train_data = np.concatenate(train_data, new_train_data)
     train_label = np.concatenate(train_label, new_train_label)
 
+    modelx = return_model()
     history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck],
                          validation_data=[test_data, test_label])
     modelx.save('classifier_model_'+str((1+i)*generate_quantity)+'-aug.h5')
     # score = model.evaluate(x_test, y_test, batch_size=32)
 
     y_score = modelx.predict(test_data)
-    generate_results(test_label[:, 0], y_score[:, 0], '13I')
+    generate_results(test_label[:, 0], y_score[:, 0], '13I'+str(i+1))
 
 
 #generate_results(y_test[:, 0], y_score[:, 0], 'ROC13R.png')
