@@ -15,13 +15,14 @@ tested this with Theano at all.
 
 The model saves images using pillow. If you don't have pillow, either install it or remove the calls to generate_images.
 """
+import keras
 import argparse
 import os
 import numpy as np
 from keras.models import Model, Sequential
 from keras.layers import Input, Dense, Reshape, Flatten
 from keras.layers.merge import _Merge
-from keras.layers.convolutional import Convolution3D, UpSampling3D
+from keras.layers.convolutional import Convolution3D, UpSampling3D, Conv3DTranspose
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras.optimizers import Adam
@@ -46,54 +47,43 @@ except ImportError:
 BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LATENTDIM = 1000
+LATENTDIM = 200
 
 def make_generator():
     if len(sys.argv) > 1 and sys.argv[1] == 'load':
         return keras.models.load_model(sys.argv[2])
+    
     model = Sequential()
     model.add(Dense(1024, input_dim=LATENTDIM))
     model.add(LeakyReLU())
-    model.add(Dense(128 * 10 * 10 * 9, input_dim=LATENTDIM))
+    model.add(Dense(256*5*5*3, input_dim=LATENTDIM))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
-    if K.image_data_format() == 'channels_first':
-        model.add(Reshape((128, 10, 10, 9), input_shape=(128 * 10 * 10 * 9,)))
-        bn_axis = 1
-    else:
-        model.add(Reshape((10, 10, 9, 128), input_shape=(128 * 10 * 10 * 9,)))
-        bn_axis = -1
-    model.add(UpSampling3D(size=(2, 2, 2)))
-    model.add(BatchNormalization(axis=bn_axis))
+    model.add(Reshape((5,5,3,256), input_shape=(256*5*5*3,)))
+    model.add(UpSampling3D(size=(2,2,2)))
+    #model.add(Conv3DTranspose(128, (2, 2, 2), strides=(2,2,2), padding='same'))
+    model.add(BatchNormalization())
     model.add(LeakyReLU())
-    model.add(Convolution3D(64, (5, 5, 3), padding='same'))
-    model.add(BatchNormalization(axis=bn_axis))
+    model.add(Convolution3D(128, (3,3,3), padding='same'))
+    model.add(BatchNormalization())
     model.add(LeakyReLU())
-    model.add(UpSampling3D(size=(2, 2, 1)))
-    model.add(BatchNormalization(axis=bn_axis))
+    model.add(UpSampling3D(size=(2,2,3)))
+    
+    model.add(BatchNormalization())
+    model.add(LeakyReLU())
+    model.add(Convolution3D(128, (3,3,3), padding='same'))
+    model.add(BatchNormalization())
+    model.add(LeakyReLU())
+    model.add(UpSampling3D(size=(2,2,1)))
+    
+    #model.add(Conv3DTranspose(64, (2, 2, 1), strides=(2,2,1), padding='same'))
+    model.add(BatchNormalization())
     model.add(LeakyReLU())
     # Because we normalized training inputs to lie in the range [-1, 1],
     # the tanh function should be used for the output of the generator to ensure its output
     # also lies in this range.
-    model.add(Convolution3D(1, (5, 5, 3), padding='same', activation='tanh'))
+    model.add(Convolution3D(1, (5,5,3), padding='same', activation='tanh'))
     return model
-
-def tile_images(image_stack):
-    """Given a stacked tensor of images, reshapes them into a horizontal tiling for display."""
-    assert len(image_stack.shape) == 3
-    image_list = [image_stack[i, :, :] for i in range(image_stack.shape[0])]
-    tiled_images = np.concatenate(image_list, axis=1)
-    return tiled_images
-
-def generate_images(generator_model, output_dir, epoch):
-    """Feeds random seeds into the generator and tiles and saves the output to a PNG file."""
-    test_image_stack = generator_model.predict(np.random.rand(10, LATENTDIM))
-    test_image_stack = (test_image_stack * 127.5) + 127.5
-    test_image_stack = np.squeeze(np.round(test_image_stack).astype(np.uint8))
-    tiled_output = tile_images(test_image_stack)
-    tiled_output = Image.fromarray(tiled_output, mode='L')  # L specifies greyscale
-    outfile = os.path.join(output_dir, 'epoch_{}.png'.format(epoch))
-    tiled_output.save(outfile)
 
 def make_discriminator():
     if len(sys.argv) > 1 and sys.argv[1] == 'load':
@@ -106,18 +96,18 @@ def make_discriminator():
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
     model = Sequential()
-    if K.image_data_format() == 'channels_first':
-        model.add(Convolution3D(64, (5, 5, 5), padding='same', input_shape=(1, 40, 40, 18)))
-    else:
-        model.add(Convolution3D(64, (5, 5, 5), padding='same', input_shape=(40, 40, 18, 1)))
+    model.add(Convolution3D(256, (3,3,3), padding='same', input_shape=(40, 40, 18, 1)))
     model.add(LeakyReLU())
-    model.add(Convolution3D(128, (5, 5, 5), kernel_initializer='he_normal', strides=[2, 2, 1], padding='same'))
+    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
     model.add(LeakyReLU())
-    model.add(Convolution3D(128, (5, 5, 5), kernel_initializer='he_normal', padding='same', strides=[2, 2, 2]))
+    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
     model.add(LeakyReLU())
+    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(LeakyReLU())
+    
     model.add(Flatten())
-    #model.add(Dense(1024, kernel_initializer='he_normal'))
-    #model.add(LeakyReLU())
+    model.add(Dense(1024, kernel_initializer='he_normal'))
+    model.add(LeakyReLU())
     model.add(Dense(1, kernel_initializer='he_normal'))
     return model
 
@@ -275,6 +265,7 @@ dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 
 # make an alt variable for saving purposes so we don't run out of space
 alt = 0
+dloss_list = []
 print('entering training loop')
 for epoch in range(10001):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))
@@ -289,15 +280,19 @@ for epoch in range(10001):
 
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, LATENTDIM), positive_y)
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
+    dloss_list.append(d_loss[0])
 
     if epoch % 10 == 0:
         # save images
-        noise = np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))
-        the_fakes = generator.predict(the_noise)
+        the_fakes = generator.predict(np.random.normal(0, 1, (16, LATENTDIM)))
         with open('gen_nod'+str(alt)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        # save dloss over time
+        with open('dloss_list'+str(alt)+'.pickle', 'wb') as handle:
+            pickle.dump(dloss_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
         # save model
-        discriminator.save('d'+str(alt)+'.h5')
-        generator.save('g'+str(alt)+'.h5')
+        discriminator.save('saved_models/d'+str(alt)+'.h5')
+        generator.save('saved_models/g'+str(alt)+'.h5')
         alt = 1 - alt
 

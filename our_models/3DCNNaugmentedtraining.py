@@ -59,6 +59,9 @@ y = 40
 z = 18
 grayscale = 1
 
+#the size of the noise vector 
+latent_dim = 200
+
 #true if a model should be trained without augmented data
 control_group = False
 # how many examples we want to generate at a time
@@ -66,7 +69,7 @@ generate_quantity = 500
 # how many times we want to do it
 augmentation_iterations = 3
 #the file containing the model for generating new training data
-generator_file = 'saved_models/g_model330.h5'
+generator_file = 'saved_models/g1.h5'
 
 #the directory for saving models
 target_directory = 'saved_models/'
@@ -228,7 +231,7 @@ if control_group:
 
 example_generator = load_generator()
 for i in range(augmentation_iterations):
-    the_noise = np.random.normal(0,1,(generate_quantity, 100))
+    the_noise = np.random.normal(0,1,(generate_quantity, latent_dim))
     new_train_data = example_generator.predict(the_noise)
     new_train_data = denormalize_img(new_train_data)
     new_train_label = []
