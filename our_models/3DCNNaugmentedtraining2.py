@@ -62,6 +62,8 @@ grayscale = 1
 #the size of the noise vector 
 latent_dim = 200
 
+experiment_setup = [[500,0],[5000, 0], [10000, 0], [500, 0], [5000, 0], [10000]]
+
 #true if a model should be trained without augmented data
 process_control_groups = False
 # how many examples we want to generate at a time
