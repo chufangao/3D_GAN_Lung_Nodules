@@ -47,7 +47,7 @@ except ImportError:
 BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LATENTDIM = 200
+LATENTDIM = 300
 
 def make_generator():
     if len(sys.argv) > 1 and sys.argv[1] == 'load':
@@ -64,7 +64,7 @@ def make_generator():
     #model.add(Conv3DTranspose(128, (2, 2, 2), strides=(2,2,2), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
-    model.add(Convolution3D(128, (3,3,3), padding='same'))
+    model.add(Convolution3D(256, (3,3,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(UpSampling3D(size=(2,2,3)))
@@ -100,7 +100,7 @@ def make_discriminator():
     model.add(LeakyReLU())
     model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
     model.add(LeakyReLU())
-    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
     model.add(LeakyReLU())
     model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
     model.add(LeakyReLU())
@@ -266,6 +266,7 @@ dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 # make an alt variable for saving purposes so we don't run out of space
 alt = 0
 dloss_list = []
+
 print('entering training loop')
 for epoch in range(10001):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))
@@ -285,11 +286,11 @@ for epoch in range(10001):
     if epoch % 10 == 0:
         # save images
         the_fakes = generator.predict(np.random.normal(0, 1, (16, LATENTDIM)))
-        with open('gen_nod'+str(alt)+'.pickle', 'wb') as handle:
+        with open('../images/gen_nod'+str(alt)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
         # save dloss over time
-        with open('dloss_list'+str(alt)+'.pickle', 'wb') as handle:
-            pickle.dump(dloss_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        #with open('../desktop/dloss_list'+str(alt)+'.pickle', 'wb') as handle:
+        #    pickle.dump(dloss_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # save model
         discriminator.save('saved_models/d'+str(alt)+'.h5')

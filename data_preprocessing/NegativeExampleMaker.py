@@ -178,13 +178,13 @@ for i in range(len(allNodules)):
         seriesID = allNodules["SeriesID"][i]
         # if seriesID wasn't the last one, and not first element, and we want to take negative samples
         if prevID != seriesID and i != 0 and takeNegativeSample:
-            for theta in range(10): #specifies how many negative samples we want per scan
+            for theta in range(30): #specifies how many negative samples we want per scan
                 counterx += 1
                 # get negative colume and [zmin, zmax]
                 negtoadd, zholder = createNegative(exclude_set, imageDict, slicethickness)
                 # check validity of created volume
                 if (len(negtoadd) == Zsize):
-                    negativelist.append(negtoadd)
+                    negativelist.append(np.clip(negtoadd, -1434, 2446))
                 elif len((negtoadd)) == 0:
                     print ("Negsample Parse Failed: " + str(prevID))
                     pfailedneglist.append(prevID)
@@ -273,7 +273,7 @@ for i in range(len(allNodules)):
                             else:
                                 np.rot90(postoadd, rnum, axes = (1,2))
                         if postoadd.shape == (40,40,18):
-                            positivelist.append(postoadd)
+                            positivelist.append(np.clip(postoadd, -1434, 2446))
                         else:
                             print('nodeID faied: ', nodeID,'\nseriesID: ', seriesID)
                     elif len((postoadd)) == 0:
@@ -316,6 +316,8 @@ print ("Positive samples: " + str(len(positivelist)))
 print ("Negative samples: " + str(len(negativelist)))
 #print (counterx)
 #print (counterzeta)
+
+
 with open(savePath+"PositiveAugmented.pickle", 'wb') as handle:
     pickle.dump(positivelist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
