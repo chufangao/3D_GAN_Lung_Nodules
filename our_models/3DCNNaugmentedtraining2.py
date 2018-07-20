@@ -62,7 +62,12 @@ grayscale = 1
 #the size of the noise vector 
 latent_dim = 200
 
-experiment_setup = [[500,0],[5000, 0], [10000, 0], [500, 0], [5000, 0], [10000]]
+#the number of fake positive examples and real negative examples to add to the base data set for each trial
+experiment_trials =
+    [[.1, 0], [1.0, 0], [2.0, 0], [.1, .1], [1.0, 1.0], [2.0, 2.0]]
+#the number for validating the network it is the same
+#these examples are taken equally from both the positive and negative examples
+validation_percentage = .2
 
 #true if a model should be trained without augmented data
 process_control_groups = False
@@ -149,7 +154,6 @@ def denormalize_img(normalized_image):
 
 
 #dataloading
-cutoff = 4606
 loadedpos = None
 top_threshold = 2446
 bottom_threshold = -1434
@@ -157,22 +161,25 @@ with open("/home/cc/Data/PositiveAugmented.pickle", "rb") as f:
     print("fine")
     loadedpos = pickle.load(f)
 
-smallpos = loadedpos[0:cutoff]
+cutoff = int(validation_percentage*len(loadedpos))
+valpos = loadedpos[0:cutoff]
+valpos = np.array(valpos)
+valpos = valpos.reshape(valpos.shape[0], x, y, z, 1)
+smallpos = loadedpos[cutoff:]
 smallpos = np.array(smallpos)
 smallpos = smallpos.reshape(smallpos.shape[0], x, y, z, 1)
 print (smallpos.shape)
-valpos = loadedpos[cutoff:]
-valpos = np.array(valpos)
-valpos = valpos.reshape(valpos.shape[0], x, y, z, 1)
 del loadedpos
+pos_len = len(smallpos)
 
 loadedneg = None
 with open("/home/cc/Data/NegativeAugmented.pickle", "rb") as f:
     print("fine")
     loadedneg = pickle.load(f)
 
-smallneg = loadedneg[0:cutoff]
-valneg = loadedneg[cutoff:cutoff+819] #what is the 819?
+valneg = loadedneg[0:cutoff]
+neg_cutoff = cutoff + pos_len
+smallneg = loadedneg[cutoff: neg_cutoff]
 del loadedneg
 smallneg = np.array(smallneg)
 smallneg = smallneg.reshape(smallneg.shape[0], x, y, z, 1)
@@ -180,33 +187,26 @@ print (smallneg.shape)
 valneg = np.array(valneg)
 valneg = valneg.reshape(valneg.shape[0], x, y, z, 1)
 
-train_data = np.concatenate((smallpos, smallneg), axis=0)
+#this set contains the base training data for testing on
+base_set = np.concatenate((smallpos, smallneg), axis=0)
 '''for place in range(len(x_train)):
     x_train[place] = np.dstack(x_train[place])'''
 print ("FinsetupTrain")
-print (train_data.shape)
-train_data = np.array(train_data)
-print (train_data.shape)
-'''for k in range(len(x_train)):
-    for a in range(len(x_train[k])):
-        for b in range(len(x_train[k][a])):
-            x_train[k][a][b] = np.asarray(x_train[k][a][b])
-        x_train[k][a] = np.asarray(x_train[k][a])
-    x_train[k] = np.asarray(x_train[k]) '''
-#x_train = np.asarray(x_train)
-#print (x_train.shape)    
+print (base_set.shape)
+base_set = np.array(base_set)
+print (base_set.shape)
 
 #print (x_train[0])
-print (len(train_data[0][0]))
-print (len(train_data[0][0][0]))
-train_label = []
+print (len(base_set[0][0]))
+print (len(base_set[0][0][0]))
+base_label = []
 #print (x_train)
 for i in range(len(smallpos)):
-    train_label.append([1, 0])
+    base_label.append([1, 0])
     
 for i in range(len(smallneg)):
-    train_label.append([0, 1])
-train_label = np.array(train_label)
+    base_label.append([0, 1])
+base_label = np.array(base_label)
 
 
 test_data = np.concatenate((valpos, valneg), axis=0)
@@ -226,32 +226,30 @@ test_label = np.array(test_label)
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)     
 modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 
-if process_control_groups:
-    modelx = return_model()
-
-    history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck], validation_data=[test_data, test_label])
-    modelx.save(target_directory+'classifier_model_0-aug.h5')
-    #score = model.evaluate(x_test, y_test, batch_size=32)
-
-    y_score = modelx.predict(test_data)
-    generate_results(test_label[:, 0], y_score[:, 0], '13I_control')
-
 example_generator = load_generator()
-for i in range(augmentation_iterations):
-    the_noise = np.random.normal(0,1,(generate_quantity, latent_dim))
-    new_train_data = example_generator.predict(the_noise)
-    new_train_data = denormalize_img(new_train_data)
-    new_train_label = []
-    for j in range(len(new_train_data)):
-        new_train_label.append([1,0])
-    print('train_data type:'+str(type(train_data))+'; new_train_data type: '+str(type(new_train_data)))
-    print(train_data.shape)
-    print(new_train_data.shape)
-    train_data = np.concatenate((train_data, new_train_data), 0)
-    train_label = np.concatenate((train_label, new_train_label))
+
+for i in experiment_trials:
+    the_noise = np.random.normal(0,1,(i[0], latent_dim))
+    fake_pos_data = example_generator.predict(the_noise)
+    fake_pos_data = denormalize_img(fake_pos_data)
+    fake_pos_label = []
+    for j in range(len(fake_pos_data)):
+        fake_pos_label.append([1, 0])
+    print('train_data type:' + str(type(base_set)) + '; new_train_data type: ' + str(type(fake_pos_data)))
+    print(base_set.shape)
+    print(fake_pos_data.shape)
+    train_set = np.concatenate((base_set, fake_pos_data), 0)
+    train_label = np.concatenate((base_label, fake_pos_label))
+
+    new_neg_data = smallneg[neg_cutoff : neg_cutoff + i[1]]
+    new_neg_label = []
+    for j in range(len(new_neg_data)):
+        new_neg_label.append([0, 1])
+    train_set = np.concatenate((train_set, new_neg_data), 0)
+    train_label = np.concatenate((train_label, new_neg_label))
 
     modelx = return_model()
-    history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck],
+    history = modelx.fit(base_set, base_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck],
                          validation_data=[test_data, test_label])
     modelx.save(target_directory+'classifier_model_'+str((1+i)*generate_quantity)+'-aug.h5')
     # score = model.evaluate(x_test, y_test, batch_size=32)
