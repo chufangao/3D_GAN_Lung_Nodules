@@ -63,13 +63,18 @@ grayscale = 1
 latent_dim = 200
 
 #true if a model should be trained without augmented data
-control_group = False
+process_control_groups = False
 # how many examples we want to generate at a time
 generate_quantity = 500
 # how many times we want to do it
-augmentation_iterations = 3
+augmentation_iterations = 2
 #the file containing the model for generating new training data
 generator_file = 'saved_models/g1.h5'
+
+#the number of negative examples to add at a time
+negative_quantity = generate_quantity
+#the number of times to add negative examples
+negative_iterations = augmentation_iterations
 
 #the directory for saving models
 target_directory = 'saved_models/'
@@ -165,7 +170,7 @@ with open("/home/cc/Data/NegativeAugmented.pickle", "rb") as f:
     loadedneg = pickle.load(f)
 
 smallneg = loadedneg[0:cutoff]
-valneg = loadedneg[cutoff:cutoff+819]
+valneg = loadedneg[cutoff:cutoff+819] #what is the 819?
 del loadedneg
 smallneg = np.array(smallneg)
 smallneg = smallneg.reshape(smallneg.shape[0], x, y, z, 1)
@@ -219,7 +224,7 @@ test_label = np.array(test_label)
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)     
 modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 
-if control_group:
+if process_control_groups:
     modelx = return_model()
 
     history = modelx.fit(train_data, train_label, batch_size=60, epochs=20, callbacks=[tbCallBack, modelcheck], validation_data=[test_data, test_label])
