@@ -97,7 +97,9 @@ while Xhigh < 512:
     allboxYs.append([Xlow, Xhigh])
     Xlow += XYstride
     Xhigh += XYstride              
-counterx = 0       
+counterx = 0
+
+# start validation
 for seriesID in valSeries:
     counterx += 1
     print ("File: " + str(counterx))
