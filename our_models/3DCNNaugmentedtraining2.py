@@ -122,6 +122,11 @@ def denormalize_img(normalized_image):
     rval += 506
     return rval
 
+experiment_dir = target_directory + experiment_name + '/'
+while(os.path.exists(experiment_dir)):
+    experiment_name = input('Experiment '+experiment_name+' already exists. Name this experiment: ') 
+    experiment_dir = target_directory + experiment_name + '/'
+os.mkdir(experiment_dir)
 
 # dataloading
 loadedpos = None
@@ -187,10 +192,6 @@ modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.
 # load generator
 example_generator = load_generator()
 
-experiment_dir = target_directory + experiment_name + '/'
-if not os.path.exists(experiment_dir):
-    os.mkdir(experiment_dir)
-
 # perform experiments
 for i in range(len(experiment_trials)):
     trial_details = experiment_trials[i]
@@ -204,10 +205,10 @@ for i in range(len(experiment_trials)):
         os.mkdir(trial_dir)
 
     with open(trial_dir+'trial_description.txt','w') as f:
-        f.write('experiment: '+experiment_name)
-        f.write('trial: '+str(i))
-        f.write('pos_aug: ' + str(trial_details[0]))
-        f.write('neg_aug: ' + str(trial_details[1]))
+        f.write('experiment: '+experiment_name+'\n')
+        f.write('trial: '+str(i)+'\n')
+        f.write('pos_aug: ' + str(trial_details[0])+'\n')
+        f.write('neg_aug: ' + str(trial_details[1])+'\n')
 
     # generate fake pos data according to experiment
     if trial_details[0] != 0:
