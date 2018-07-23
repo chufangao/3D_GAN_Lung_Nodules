@@ -39,13 +39,13 @@ x = 40
 y = 40
 z = 18
 grayscale = 1
-EPOCHS = 1
+EPOCHS = 20
 #the size of the noise vector 
 latent_dim = 200
 
 #the number of fake positive examples and real negative examples to add to the base data set for each trial
 experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
-#the number for validating the network it is the same
+
 #these examples are taken equally from both the positive and negative examples
 validation_percentage = .2
 
@@ -153,7 +153,6 @@ with open("/home/cc/Data/NegativeAugmented.pickle", "rb") as f:
 valneg = loadedneg[0:cutoff]
 neg_cutoff = cutoff + pos_len
 smallneg = loadedneg[cutoff: neg_cutoff]
-del loadedneg
 smallneg = np.array(smallneg)
 smallneg = smallneg.reshape(smallneg.shape[0], x, y, z, 1)
 valneg = np.array(valneg)
@@ -210,11 +209,14 @@ for i in experiment_trials:
 
     # get neg data according to experiment
     if i[1] != 0:
-        new_neg_data = smallneg[neg_cutoff : neg_cutoff + int(i[1]*generate_quantity)]
+        new_neg_data = loadedneg[neg_cutoff : neg_cutoff + int(i[1]*generate_quantity)]
         new_neg_label = []
         for j in range(len(new_neg_data)):
             new_neg_label.append([0, 1])
         new_neg_label = np.array(new_neg_label)
+        new_neg_data = np.array(new_neg_data)
+        new_neg_data = new_neg_data.reshape(new_neg_data.shape[0], x, y, z, 1)
+        #print(train_set.shape, new_neg_data.shape)
         train_set = np.concatenate((train_set, new_neg_data), 0)
         #print(train_label.shape, new_neg_label.shape)
         train_label = np.concatenate((train_label, new_neg_label), 0)
