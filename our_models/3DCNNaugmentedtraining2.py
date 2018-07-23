@@ -44,7 +44,7 @@ grayscale = 1
 #the name of the experiment; used to create a directory to store results
 experiment_name = 'experimental_experiment1'
 
-EPOCHS = 20
+EPOCHS = 1
 #the size of the noise vector
 latent_dim = 200
 
