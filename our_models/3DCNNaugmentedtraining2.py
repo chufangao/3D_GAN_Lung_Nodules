@@ -42,9 +42,9 @@ z = 18
 grayscale = 1
 
 #the name of the experiment; used to create a directory to store results
-experiment_name = 'experimental_experiment1'
+experiment_name = 'experiment1'
 
-EPOCHS = 1
+EPOCHS = 20
 #the size of the noise vector
 latent_dim = 200
 
