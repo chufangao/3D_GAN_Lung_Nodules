@@ -198,7 +198,7 @@ modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.
 example_generator = load_generator()
 
 if not os.path.exists(experiment_name):
-    os.mkdir(experiment_name)                                                                                                                                                                            ``
+    os.mkdir(experiment_name)                                                                                                                                                                            
 
 # perform experiments
 for i in experiment_trials:
