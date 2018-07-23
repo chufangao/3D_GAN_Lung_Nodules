@@ -67,10 +67,9 @@ numScans = len(valSeries)
 
 
 experimentpath = '/home/cc/deep_learning_reu/our_models/saved_models/experiment1/'
-trial = 0
 for modelfile in os.listdir(experimentpath):
     # modelfile = '/home/cc/deep_learning_reu/our_models/saved_models/classifier_model_500-aug.h5'
-    trialFolder = modelfile+'trial_'+str(trial)+'/'
+    trialFolder = experimentpath+modelfile+'/'
     modelx = keras.models.load_model(trialFolder+'classifier_model.h5')
 
     FPrates = []
@@ -190,7 +189,7 @@ for modelfile in os.listdir(experimentpath):
     plt.ylim([0,1])
     plt.tick_params(labelsize = 12)
 
-    plt.savefig(experimentpath+str(trial)+'/aug_FROC_plot1.png')
+    plt.savefig(trialFolder+'aug_FROC_plot1.png')
 
 
     plt.gcf().clear()
@@ -201,7 +200,7 @@ for modelfile in os.listdir(experimentpath):
     plt.ylim([0,1])
     plt.tick_params(labelsize = 12)
 
-    plt.savefig(experimentpath+str(trial)+'/aug_FROC_plotAdj1.png')
+    plt.savefig(trialFolder+'aug_FROC_plotAdj1.png')
 
 
     plt.gcf().clear()
@@ -212,6 +211,5 @@ for modelfile in os.listdir(experimentpath):
     plt.ylim([0,1])
     plt.tick_params(labelsize = 12)
 
-    plt.savefig(experimentpath+str(trial)+'/aug_FROC_plot21.png')
-    trial += 1
+    plt.savefig(trialFolder+'aug_FROC_plot21.png')
 
