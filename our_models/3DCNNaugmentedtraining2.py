@@ -54,19 +54,8 @@ experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2
 #these examples are taken equally from both the positive and negative examples
 validation_percentage = .2
 
-#true if a model should be trained without augmented data
-process_control_groups = False
-# how many examples we want to generate at a time
-generate_quantity = 500
-# how many times we want to do it
-augmentation_iterations = 2
 #the file containing the model for generating new training data
 generator_file = 'saved_models/g1.h5'
-
-#the number of negative examples to add at a time
-negative_quantity = generate_quantity
-#the number of times to add negative examples
-negative_iterations = augmentation_iterations
 
 #the directory for saving models
 target_directory = 'saved_models/'
@@ -147,47 +136,48 @@ cutoff = int(validation_percentage*len(loadedpos))
 valpos = loadedpos[0:cutoff]
 valpos = np.array(valpos)
 valpos = valpos.reshape(valpos.shape[0], x, y, z, 1)
-smallpos = loadedpos[cutoff:]
-smallpos = np.array(smallpos)
-smallpos = smallpos.reshape(smallpos.shape[0], x, y, z, 1)
-print ('pos data shape ', smallpos.shape, ' val pos shape', valpos.shape)
+trainpos = loadedpos[cutoff:]
+trainpos = np.array(trainpos)
+trainpos = trainpos.reshape(trainpos.shape[0], x, y, z, 1)
+print ('pos data shape ', trainpos.shape, ' val pos shape', valpos.shape)
 del loadedpos
-pos_len = len(smallpos)
+generator_quantity = len(trainpos)
 
 loadedneg = None
 with open("/home/cc/Data/NegativeAugmented.pickle", "rb") as f:
     print("fine")
     loadedneg = pickle.load(f)
 valneg = loadedneg[0:cutoff]
-neg_cutoff = cutoff + pos_len
-smallneg = loadedneg[cutoff: neg_cutoff]
-# loadedneg is currently necessary for fetching new negative examples
-del loadedneg
-smallneg = np.array(smallneg)
-smallneg = smallneg.reshape(smallneg.shape[0], x, y, z, 1)
+neg_cutoff = cutoff + generator_quantity
+trainneg = loadedneg[cutoff: neg_cutoff]
+trainneg = np.array(trainneg)
+trainneg = trainneg.reshape(trainneg.shape[0], x, y, z, 1)
 valneg = np.array(valneg)
 valneg = valneg.reshape(valneg.shape[0], x, y, z, 1)
-print ('neg data shape', smallneg.shape, 'val neg shape', valneg.shape)
+extra_neg = loadedneg[neg_cutoff:]
+# loadedneg is currently necessary for fetching new negative examples
+del loadedneg
+print ('neg data shape', trainneg.shape, 'val neg shape', valneg.shape)
 
 #this set contains the base training data for testing on
-base_set = np.concatenate((smallpos, smallneg), axis=0)
+base_set = np.concatenate((trainpos, trainneg), axis=0)
 print ("Train data shape", base_set.shape)
 test_data = np.concatenate((valpos, valneg), axis=0)
 print ("Val data shape", test_data.shape)
 
 # create labels for training data
 base_label = []
-for i in range(len(smallpos)):
+for trial_details in range(len(trainpos)):
     base_label.append([1, 0])
-for i in range(len(smallneg)):
+for trial_details in range(len(trainneg)):
     base_label.append([0, 1])
 base_label = np.array(base_label)
 
 # create labels for testing data
 test_label = []
-for i in range(len(valpos)):
+for trial_details in range(len(valpos)):
     test_label.append([1, 0])
-for i in range(len(valneg)):
+for trial_details in range(len(valneg)):
     test_label.append([0, 1])
 test_label = np.array(test_label)
 
@@ -197,18 +187,32 @@ modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.
 # load generator
 example_generator = load_generator()
 
-if not os.path.exists(experiment_name):
-    os.mkdir(experiment_name)                                                                                                                                                                            
+experiment_dir = target_directory + experiment_name + '/'
+if not os.path.exists(experiment_dir):
+    os.mkdir(experiment_dir)
 
 # perform experiments
-for i in experiment_trials:
-    print('experiment:', i)
+for i in range(len(experiment_trials)):
+    trial_details = experiment_trials[i]
+
+    print('trial: ', i)
     train_set = base_set
     train_label = base_label
 
+    with open('trial_description.txt','w') as f:
+        f.write('experiment: '+experiment_name)
+        f.write('trial: '+str(i))
+        f.write('pos_aug: ' + str(trial_details[0]))
+        f.write('neg_aug: ' + str(trial_details[1]))
+
+    trial_dir = experiment_dir + "trial_" + str(trial_details)
+    if not os.path.exists(trial_dir):
+        os.mkdir(trial_dir)
+
+
     # generate fake pos data according to experiment
-    if i[0] != 0:
-        fake_pos_quantity = int(i[0] * pos_len)
+    if trial_details[0] != 0:
+        fake_pos_quantity = int(trial_details[0] * generator_quantity)
         the_noise = np.random.normal(0, 1, (fake_pos_quantity, latent_dim))
         fake_pos_data = example_generator.predict(the_noise)
         fake_pos_data = denormalize_img(fake_pos_data)
@@ -221,9 +225,9 @@ for i in experiment_trials:
         # print('train set shape', train_set.shape, 'train label shape', train_label.shape)
 
     # get neg data according to experiment
-    if i[1] != 0:
-        new_neg_quantity = int(i[1] * pos_len)
-        new_neg_data = loadedneg[neg_cutoff : neg_cutoff + pos_len]
+    if trial_details[1] != 0:
+        new_neg_quantity = int(trial_details[1] * generator_quantity)
+        new_neg_data = extra_neg[0:new_neg_quantity]
         new_neg_label = []
         for j in range(len(new_neg_data)):
             new_neg_label.append([0, 1])
@@ -241,11 +245,11 @@ for i in experiment_trials:
             batch_size=60, epochs=EPOCHS,
             #callbacks=[tbCallBack, modelcheck],
             validation_data=[test_data, test_label])
-    modelx.save(target_directory+'classifier_model_'+str(i[0])+':'+str(i[1])+'-aug.h5')
+    modelx.save(trial_dir +'classifier_model.h5')
     # score = model.evaluate(x_test, y_test, batch_size=32)
 
     y_score = modelx.predict(test_data)
-    generate_results(test_label[:, 0], y_score[:, 0], target_directory+'13I'+str(i[0])+':'+str(i[1]))
+    generate_results(test_label[:, 0], y_score[:, 0], trial_dir+'13I')
 
 
 #print (history.history)
