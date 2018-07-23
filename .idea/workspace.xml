@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b8470e6-03dd-4b51-85f1-751d6a25a768" name="Default" comment="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
-      <change afterPath="$PROJECT_DIR$/our_models/4.2weights.01-0.19.hdf5" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/our_models/4.2weights.02-0.11.hdf5" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/our_models/Graph/events.out.tfevents.1531931272.deep-learning-reu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining.py" beforeDir="false" afterPath="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py" beforeDir="false" afterPath="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,38 +18,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="3DCNNaugmentedtraining.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/our_models/3DCNNaugmentedtraining.py">
+      <file leaf-file-name="3DCNNaugmentedtraining2.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="238" selection-start-line="238" selection-end-line="238" />
-              <folding>
-                <element signature="e#24#85#1" />
-                <element signature="e#111#172#1" />
-                <element signature="e#198#259#1" />
-                <element signature="e#435#547#1" />
-              </folding>
+            <state relative-caret-position="422">
+              <caret line="268" lean-forward="true" selection-start-line="268" selection-end-line="268" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="3DCNNaugmentedtraining.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/our_models/old_models/3DCNNaugmentedtraining.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="load_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/our_models/load_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="547">
-              <caret line="287" column="35" selection-start-line="287" selection-start-column="35" selection-end-line="287" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="load_model_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/our_models/load_model_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="262" column="48" selection-start-line="262" selection-start-column="48" selection-end-line="262" selection-end-column="48" />
-              <folding>
-                <element signature="e#2846#3377#0" />
-              </folding>
+            <state relative-caret-position="-459">
+              <caret line="200" column="16" selection-start-line="200" selection-start-column="16" selection-end-line="200" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -59,11 +44,29 @@
       <file leaf-file-name="3d_wgan_gp2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="212" column="37" selection-start-line="212" selection-start-column="37" selection-end-line="212" selection-end-column="37" />
+            <state relative-caret-position="123">
+              <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
               <folding>
                 <element signature="e#1223#1238#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gantest.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/our_models/gantest.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="69" column="21" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CNNinputDataExtractionV3.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data_preprocessing/CNNinputDataExtractionV3.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4589">
+              <caret line="301" column="31" lean-forward="true" selection-start-line="301" selection-start-column="31" selection-end-line="301" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -96,6 +99,7 @@
       <find>normalize</find>
       <find>print(</find>
       <find>randomweig</find>
+      <find>cutoff</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -119,8 +123,10 @@
         <option value="$PROJECT_DIR$/models/wgan_gp_test.py" />
         <option value="$PROJECT_DIR$/our_models/load_model.py" />
         <option value="$PROJECT_DIR$/showimages.py" />
+        <option value="$PROJECT_DIR$/models/Wholescanapplication2.1.py" />
         <option value="$PROJECT_DIR$/our_models/3d_wgan_gp2.py" />
         <option value="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining.py" />
+        <option value="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py" />
       </list>
     </option>
   </component>
@@ -144,7 +150,7 @@
             <path>
               <item name="deep_learning_reu" type="b2602c69:ProjectViewProjectNode" />
               <item name="deep_learning_reu" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
+              <item name="data_preprocessing" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="deep_learning_reu" type="b2602c69:ProjectViewProjectNode" />
@@ -174,6 +180,7 @@
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\models\images" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\our_models\old_models" />
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\our_models" />
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu" />
     </key>
@@ -465,19 +472,54 @@
       <option name="project" value="LOCAL" />
       <updated>1531932048459</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <created>1531932473163</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1531932473163</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <created>1532099601549</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1532099601549</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <created>1532105026021</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1532105026021</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <created>1532110500871</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1532110500871</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <created>1532355398986</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1532355398986</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="960" y="0" width="960" height="1040" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.4992272" weight="0.23222223" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.4992272" visible="true" weight="0.23222223" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="right" id="R Graphics" order="4" weight="0.3288889" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.47444445" side_tool="true" weight="0.28349945" />
       <window_info anchor="bottom" id="Run" order="5" sideWeight="0.49666667" weight="0.28349945" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.52555555" visible="true" weight="0.32890365" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.52555555" visible="true" weight="0.3211517" />
       <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.4977778" weight="0.358804" />
       <window_info id="Structure" order="0" sideWeight="0.50165015" side_tool="true" weight="0.27222222" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49946696" weight="0.32779622" />
@@ -525,35 +567,10 @@
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="16" />
+      <option name="time" value="18" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cnn_test_functional.py" />
-    <entry file="file:////medixsrv/REU/2017/DL for Lung Nodule Detection (Sunny and Natalia)/Code/SlidingPositives.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/keras/datasets/cifar10.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="43" column="42" selection-start-line="43" selection-start-column="42" selection-end-line="43" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/dcgan_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="111" column="13" selection-start-line="111" selection-start-column="13" selection-end-line="111" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gan_experiments/gan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gan_experiments/generator_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -703,23 +720,6 @@
         <state relative-caret-position="-2663" />
       </provider>
     </entry>
-    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/keras/engine/training.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="34" column="8" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="212" column="37" selection-start-line="212" selection-start-column="37" selection-end-line="212" selection-end-column="37" />
-          <folding>
-            <element signature="e#1223#1238#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/-313451744/numpy/random/mtrand.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -739,21 +739,61 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/our_models/load_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="287" column="35" selection-start-line="287" selection-start-column="35" selection-end-line="287" selection-end-column="35" />
+        <state relative-caret-position="-459">
+          <caret line="200" column="16" selection-start-line="200" selection-start-column="16" selection-end-line="200" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/our_models/3DCNNaugmentedtraining.py">
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/keras/engine/training.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="238" selection-start-line="238" selection-end-line="238" />
+        <state relative-caret-position="986">
+          <caret line="83" column="65" selection-start-line="83" selection-start-column="65" selection-end-line="83" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/Wholescanapplication2.1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="85" column="30" selection-start-line="85" selection-start-column="30" selection-end-line="85" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_preprocessing/NegativeExampleMaker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1377" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_preprocessing/CNNinputDataExtractionV3.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4589">
+          <caret line="301" column="31" lean-forward="true" selection-start-line="301" selection-start-column="31" selection-end-line="301" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
           <folding>
-            <element signature="e#24#85#1" />
-            <element signature="e#111#172#1" />
-            <element signature="e#198#259#1" />
-            <element signature="e#435#547#1" />
+            <element signature="e#1223#1238#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/our_models/gantest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="69" column="21" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/our_models/old_models/3DCNNaugmentedtraining.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="422">
+          <caret line="268" lean-forward="true" selection-start-line="268" selection-end-line="268" />
         </state>
       </provider>
     </entry>

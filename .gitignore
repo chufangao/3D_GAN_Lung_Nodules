@@ -3,3 +3,4 @@
 /saved_models/*
 *.swp
 our_models/saved_models/*
+our_models/Graph/*
