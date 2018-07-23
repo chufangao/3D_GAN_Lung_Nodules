@@ -199,16 +199,15 @@ for i in range(len(experiment_trials)):
     train_set = base_set
     train_label = base_label
 
-    with open('trial_description.txt','w') as f:
+    trial_dir = experiment_dir + "trial_" + str(i)+'/'
+    if not os.path.exists(trial_dir):
+        os.mkdir(trial_dir)
+
+    with open(trial_dir+'trial_description.txt','w') as f:
         f.write('experiment: '+experiment_name)
         f.write('trial: '+str(i))
         f.write('pos_aug: ' + str(trial_details[0]))
         f.write('neg_aug: ' + str(trial_details[1]))
-
-    trial_dir = experiment_dir + "trial_" + str(trial_details)
-    if not os.path.exists(trial_dir):
-        os.mkdir(trial_dir)
-
 
     # generate fake pos data according to experiment
     if trial_details[0] != 0:
