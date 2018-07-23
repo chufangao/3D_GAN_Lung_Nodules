@@ -50,6 +50,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 K.set_session(sess)
 import time
+import os
 start_time = time.time()
 print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -58,6 +59,9 @@ x = 40
 y = 40
 z = 18
 grayscale = 1
+
+#the name of the experiment; used to create a directory to store results
+experiment_name = 'experimental_experiment1'
 
 #the size of the noise vector 
 latent_dim = 200
@@ -76,7 +80,7 @@ generate_quantity = 500
 # how many times we want to do it
 augmentation_iterations = 2
 #the file containing the model for generating new training data
-generator_file = 'saved_models/g1.h5'
+generator_file = 'saved_models/-g1.h5'
 
 #the number of negative examples to add at a time
 negative_quantity = generate_quantity
@@ -228,8 +232,12 @@ modelcheck = keras.callbacks.ModelCheckpoint('4.2weights.{epoch:02d}-{val_loss:.
 
 example_generator = load_generator()
 
+if not os.path.exists(experiment_name):
+    os.mkdir(experiment_name)                                                                                                                                                                            ``
+
 for i in experiment_trials:
-    the_noise = np.random.normal(0,1,(i[0], latent_dim))
+    fake_pos_quantity = int(i[0]*pos_len)
+    the_noise = np.random.normal(0,1,(fake_pos_quantity, latent_dim))
     fake_pos_data = example_generator.predict(the_noise)
     fake_pos_data = denormalize_img(fake_pos_data)
     fake_pos_label = []
@@ -241,7 +249,8 @@ for i in experiment_trials:
     train_set = np.concatenate((base_set, fake_pos_data), 0)
     train_label = np.concatenate((base_label, fake_pos_label))
 
-    new_neg_data = smallneg[neg_cutoff : neg_cutoff + i[1]]
+    new_neg_quantity = int(i[1]*pos_len)
+    new_neg_data = smallneg[neg_cutoff : neg_cutoff + new_neg_quantity]
     new_neg_label = []
     for j in range(len(new_neg_data)):
         new_neg_label.append([0, 1])
