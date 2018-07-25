@@ -35,19 +35,13 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys
 
-try:
-    from PIL import Image
-except ImportError:
-    print('This script depends on pillow! Please install it (e.g. with pip install pillow)')
-    exit()
-
 #usage
-# .py load gen.h5 disc.h5
+# gantest.py load gen.h5 disc.h5
 
 BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LATENTDIM = 300
+LATENTDIM = 200
 
 def make_generator():
     if len(sys.argv) > 1 and sys.argv[1] == 'load':
@@ -60,25 +54,31 @@ def make_generator():
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(Reshape((5,5,3,256), input_shape=(256*5*5*3,)))
-    model.add(UpSampling3D(size=(2,2,2)))
-    #model.add(Conv3DTranspose(128, (2, 2, 2), strides=(2,2,2), padding='same'))
+    #model.add(UpSampling3D(size=(2,2,2)))
+    model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,2), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(Convolution3D(256, (3,3,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
-    model.add(UpSampling3D(size=(2,2,3)))
-    
+
+    #model.add(UpSampling3D(size=(2,2,3)))
+    model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,3), padding='same'))    
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(Convolution3D(128, (3,3,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
-    model.add(UpSampling3D(size=(2,2,1)))
-    
-    #model.add(Conv3DTranspose(64, (2, 2, 1), strides=(2,2,1), padding='same'))
+
+    #model.add(UpSampling3D(size=(2,2,1)))
+    model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,1), padding='same'))    
     model.add(BatchNormalization())
     model.add(LeakyReLU())
+    model.add(Convolution3D(128, (3,3,3), padding='same'))
+    model.add(BatchNormalization())
+    model.add(LeakyReLU())
+
+
     # Because we normalized training inputs to lie in the range [-1, 1],
     # the tanh function should be used for the output of the generator to ensure its output
     # also lies in this range.
@@ -96,13 +96,13 @@ def make_discriminator():
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
     model = Sequential()
-    model.add(Convolution3D(256, (3,3,3), padding='same', input_shape=(40, 40, 18, 1)))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(Convolution3D(64, (3,3,3), padding='same', input_shape=(40, 40, 18, 1)))
     model.add(LeakyReLU())
     model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
     model.add(LeakyReLU())
     
     model.add(Flatten())

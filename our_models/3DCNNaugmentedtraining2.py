@@ -42,14 +42,15 @@ z = 18
 grayscale = 1
 
 #the name of the experiment; used to create a directory to store results
-experiment_name = 'experiment1'
+experiment_name = 'experiment2'
 
 EPOCHS = 20
 #the size of the noise vector
 latent_dim = 200
 
 #the number of fake positive examples and real negative examples to add to the base data set for each trial
-experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
+#experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
+experiment_trials = [[.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
 
 #these examples are taken equally from both the positive and negative examples
 validation_percentage = .2
@@ -123,10 +124,10 @@ def denormalize_img(normalized_image):
     return rval
 
 experiment_dir = target_directory + experiment_name + '/'
-while(os.path.exists(experiment_dir)):
-    experiment_name = input('Experiment '+experiment_name+' already exists. Name this experiment: ') 
-    experiment_dir = target_directory + experiment_name + '/'
-os.mkdir(experiment_dir)
+#while(os.path.exists(experiment_dir)):
+#    experiment_name = input('Experiment '+experiment_name+' already exists. Name this experiment: ') 
+#    experiment_dir = target_directory + experiment_name + '/'
+#os.mkdir(experiment_dir)
 
 # dataloading
 loadedpos = None

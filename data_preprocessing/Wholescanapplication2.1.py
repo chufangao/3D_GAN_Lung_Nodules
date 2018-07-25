@@ -66,11 +66,13 @@ with open(savepath+"workingValidationSeries.pickle", "rb") as f:
 numScans = len(valSeries)
 
 
-experimentpath = '/home/cc/deep_learning_reu/our_models/saved_models/experiment1/'
+experimentpath = '/home/cc/deep_learning_reu/our_models/saved_models/experiment2/'
 for modelfile in os.listdir(experimentpath):
+    #print (modelfile)
     # modelfile = '/home/cc/deep_learning_reu/our_models/saved_models/classifier_model_500-aug.h5'
     trialFolder = experimentpath+modelfile+'/'
     modelx = keras.models.load_model(trialFolder+'classifier_model.h5')
+    print(trialFolder)
 
     FPrates = []
     sensitivities = []
