@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 threshold = .9
-index = 2
+index = 33
 
 class IndexTracker(object):
     def __init__(self, ax, X):
@@ -33,9 +33,8 @@ class IndexTracker(object):
         ax.set_ylabel('slice %s' % self.ind)
         self.im.axes.figure.canvas.draw()
 
-posdat = pickle.load(open('images/gen_nod0.pickle','rb'))
-# with open('images/PositiveAugmented.pickle','rb') as f:
-#     posdat = pickle.load(f)
+# posdat = pickle.load(open('images/gen_nod0.pickle','rb'))
+posdat = pickle.load(open('images/PositiveAugmented.pickle','rb'))
 
 # print(np.average(posdat, axis=(1,2,3,4))); exit()
 print('white imgs', [i for i, v in enumerate(posdat) if np.average(v) > threshold])
@@ -43,6 +42,6 @@ posdat = np.array(posdat)
 print(posdat.shape)
 
 fig, ax = plt.subplots(1, 1)
-tracker = IndexTracker(ax, posdat[index,:,:,:,0])
+tracker = IndexTracker(ax, posdat[index,:,:,:])
 fig.canvas.mpl_connect('scroll_event', tracker.onscroll)
 plt.show()
