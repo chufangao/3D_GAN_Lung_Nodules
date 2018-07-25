@@ -65,6 +65,11 @@ with open(savepath+"workingValidationSeries.pickle", "rb") as f:
     valSeries = pickle.load(f)
 numScans = len(valSeries)
 
+valDict = {}
+for seriesID in valSeries:
+    inputs = np.array(pickle.load(open(savepath + "ValClipped" + seriesID + ".pickle", 'rb')))
+    valDict[seriesID] = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)
+
 
 experimentpath = '/home/cc/deep_learning_reu/our_models/saved_models/experiment2/'
 for modelfile in os.listdir(experimentpath):
@@ -103,11 +108,11 @@ for modelfile in os.listdir(experimentpath):
     for seriesID in valSeries:
         counterx += 1
         print ("File: " + str(counterx))
-        inputs = None
-        with open(savepath+"ValClipped" + seriesID + ".pickle", 'rb') as f:
-            inputs = pickle.load(f)
-        inputs = np.array(inputs)
-        inputs = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)
+        inputs = valDict[seriesID]
+        # with open(savepath+"ValClipped" + seriesID + ".pickle", 'rb') as f:
+        #     inputs = pickle.load(f)
+        # inputs = np.array(inputs)
+        # inputs = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)
         predictions = modelx.predict(inputs, batch_size=48)
 
         Zlow = 0
