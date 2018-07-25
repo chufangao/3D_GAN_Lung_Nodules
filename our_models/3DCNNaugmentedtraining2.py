@@ -69,10 +69,10 @@ while(os.path.exists(experiment_dir)):
    experiment_dir = target_directory + experiment_name + '/'
 os.mkdir(experiment_dir)
 
-records_dir = experiment_dir+experiment_name+'records/'
+records_dir = experiment_dir+'records/'
 os.mkdir(records_dir)
 
-root_trial_dir = experiment_dir+experiment_name+'trials/'
+root_trial_dir = experiment_dir+'trials/'
 os.mkdir(root_trial_dir)
 
 shutil.copyfile(generator_file, records_dir+experiment_name+'_gen.h5')

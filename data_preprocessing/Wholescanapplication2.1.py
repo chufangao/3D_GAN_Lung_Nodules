@@ -74,9 +74,9 @@ for seriesID in valSeries:
 
 experiment_name = 'experiment2' #the name of this experiment. used to name files
 experiment_dir = '/home/cc/deep_learning_reu/our_models/saved_models/'+experiment_name+'/'#the directory where the experiment and it's results will be saved
-records_dir = experiment_dir+experiment_name+'records/' #this directory contains all the code necessary that was run in the experiment
+records_dir = experiment_dir+'records/' #this directory contains all the code necessary that was run in the experiment
 shutil.copyfile('Wholescanapplication2.1.py',records_dir+experiment_name+'_wholescanapp.py')
-root_trials_dir = experiment_dir+experiment_name+'trials/' #this directory contains directories for each trial in the experiment
+root_trials_dir = experiment_dir+'trials/' #this directory contains directories for each trial in the experiment
 
 for modelfile in os.listdir(root_trials_dir):
     #print (modelfile)
