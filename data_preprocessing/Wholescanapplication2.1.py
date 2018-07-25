@@ -28,6 +28,8 @@ import time
 start_time = time.time()
 print("--- %s seconds ---" % (time.time() - start_time))
 
+import shutil
+
 import pickle
 import gc
 import pandas as pd
@@ -70,12 +72,16 @@ for seriesID in valSeries:
     inputs = np.array(pickle.load(open(savepath + "ValClipped" + seriesID + ".pickle", 'rb')))
     valDict[seriesID] = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)
 
+experiment_name = 'experiment2' #the name of this experiment. used to name files
+experiment_dir = '/home/cc/deep_learning_reu/our_models/saved_models/'+experiment_name+'/'#the directory where the experiment and it's results will be saved
+records_dir = experiment_dir+experiment_name+'records/' #this directory contains all the code necessary that was run in the experiment
+shutil.copyfile('Wholescanapplication2.1.py',records_dir+experiment_name+'_wholescanapp.py')
+root_trials_dir = experiment_dir+experiment_name+'trials/' #this directory contains directories for each trial in the experiment
 
-experimentpath = '/home/cc/deep_learning_reu/our_models/saved_models/experiment2/'
-for modelfile in os.listdir(experimentpath):
+for modelfile in os.listdir(root_trials_dir):
     #print (modelfile)
     # modelfile = '/home/cc/deep_learning_reu/our_models/saved_models/classifier_model_500-aug.h5'
-    trialFolder = experimentpath+modelfile+'/'
+    trialFolder = root_trials_dir + modelfile + '/'
     modelx = keras.models.load_model(trialFolder+'classifier_model.h5')
     print(trialFolder)
 
