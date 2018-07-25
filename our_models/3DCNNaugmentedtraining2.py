@@ -32,6 +32,7 @@ import matplotlib.pyplot as plt
 K.set_session(sess)
 import time
 import os
+import shutil
 start_time = time.time()
 print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -61,6 +62,21 @@ generator_file = 'saved_models/g1.h5'
 
 #the directory for saving models
 target_directory = 'saved_models/'
+
+experiment_dir = target_directory + experiment_name + '/'
+while(os.path.exists(experiment_dir)):
+   experiment_name = input('Experiment '+experiment_name+' already exists. Please manually delete the old directory or name give this experiment a new name: ')
+   experiment_dir = target_directory + experiment_name + '/'
+os.mkdir(experiment_dir)
+
+records_dir = experiment_dir+experiment_name+'records/'
+os.mkdir(records_dir)
+
+root_trial_dir = experiment_dir+experiment_name+'trials/'
+os.mkdir(root_trial_dir)
+
+shutil.copyfile(generator_file, records_dir+experiment_name+'_gen.h5')
+shutil.copyfile('3DCNNaugmentedtraining')
 
 def return_model(n = 5, drop_rate_conv = 0.09 , drop_rate_FC = 0.56, learn_rate = 0.00024, num_nodes = 64):
     model = Sequential()
@@ -123,12 +139,6 @@ def denormalize_img(normalized_image):
     rval *= 1940
     rval += 506
     return rval
-
-experiment_dir = target_directory + experiment_name + '/'
-#while(os.path.exists(experiment_dir)):
-#    experiment_name = input('Experiment '+experiment_name+' already exists. Name this experiment: ') 
-#    experiment_dir = target_directory + experiment_name + '/'
-os.mkdir(experiment_dir)
 
 # dataloading
 loadedpos = None
@@ -202,9 +212,8 @@ for i in range(len(experiment_trials)):
     train_set = base_set
     train_label = base_label
 
-    trial_dir = experiment_dir + "trial_" + str(i)+'/'
-    if not os.path.exists(trial_dir):
-        os.mkdir(trial_dir)
+    trial_dir = root_trial_dir + "trial_" + str(i)+'/'
+    os.mkdir(trial_dir)
 
     with open(trial_dir+'trial_description.txt','w') as f:
         f.write('experiment: '+experiment_name+'\n')
