@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 threshold = .9
-index = 6
+index = 33
 
 class IndexTracker(object):
     def __init__(self, ax, X):
@@ -13,9 +13,9 @@ class IndexTracker(object):
 
         self.X = X
         rows, cols, self.slices = X.shape
+        self.ind = self.slices//2
         self.minind = 0
         self.maxind = 17
-        self.ind = self.minind
 
         self.im = ax.imshow(self.X[:, :, self.ind], cmap='gray')
         self.update()
@@ -37,7 +37,7 @@ class IndexTracker(object):
 posdat = pickle.load(open('images/PositiveAugmented.pickle','rb'))
 
 # print(np.average(posdat, axis=(1,2,3,4))); exit()
-# print('white imgs', [i for i, v in enumerate(posdat) if np.average(v) > threshold])
+print('white imgs', [i for i, v in enumerate(posdat) if np.average(v) > threshold])
 posdat = np.array(posdat)
 print(posdat.shape)
 

@@ -32,6 +32,8 @@ import matplotlib.pyplot as plt
 K.set_session(sess)
 import time
 import os
+import shutil
+import sys
 start_time = time.time()
 print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -42,14 +44,16 @@ z = 18
 grayscale = 1
 
 #the name of the experiment; used to create a directory to store results
-experiment_name = 'experiment1'
+experiment_name = 'experiment3'
 
 EPOCHS = 20
 #the size of the noise vector
 latent_dim = 200
 
 #the number of fake positive examples and real negative examples to add to the base data set for each trial
-experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
+#experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
+experiment_trials = [[.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
+experiment_trials = [[.3,0], [.4, 0], [.5,0], [.3,.3], [.4,.4], [.5,.5]]
 
 #these examples are taken equally from both the positive and negative examples
 validation_percentage = .2
@@ -59,6 +63,21 @@ generator_file = 'saved_models/g1.h5'
 
 #the directory for saving models
 target_directory = 'saved_models/'
+
+experiment_dir = target_directory + experiment_name + '/'
+while(os.path.exists(experiment_dir)):
+   experiment_name = input('Experiment '+experiment_name+' already exists. Please manually delete the old directory or name give this experiment a new name: ')
+   experiment_dir = target_directory + experiment_name + '/'
+os.mkdir(experiment_dir)
+
+records_dir = experiment_dir+'records/'
+os.mkdir(records_dir)
+
+root_trial_dir = experiment_dir+'trials/'
+os.mkdir(root_trial_dir)
+
+shutil.copyfile(generator_file, records_dir+experiment_name+'_gen.h5')
+shutil.copyfile(sys.argv[0], records_dir+experiment_name+'_augtraining.py')
 
 def return_model(n = 5, drop_rate_conv = 0.09 , drop_rate_FC = 0.56, learn_rate = 0.00024, num_nodes = 64):
     model = Sequential()
@@ -121,12 +140,6 @@ def denormalize_img(normalized_image):
     rval *= 1940
     rval += 506
     return rval
-
-experiment_dir = target_directory + experiment_name + '/'
-while(os.path.exists(experiment_dir)):
-    experiment_name = input('Experiment '+experiment_name+' already exists. Name this experiment: ') 
-    experiment_dir = target_directory + experiment_name + '/'
-os.mkdir(experiment_dir)
 
 # dataloading
 loadedpos = None
@@ -200,9 +213,8 @@ for i in range(len(experiment_trials)):
     train_set = base_set
     train_label = base_label
 
-    trial_dir = experiment_dir + "trial_" + str(i)+'/'
-    if not os.path.exists(trial_dir):
-        os.mkdir(trial_dir)
+    trial_dir = root_trial_dir + "trial_" + str(i)+'/'
+    os.mkdir(trial_dir)
 
     with open(trial_dir+'trial_description.txt','w') as f:
         f.write('experiment: '+experiment_name+'\n')

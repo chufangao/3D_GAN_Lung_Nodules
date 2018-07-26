@@ -1,20 +1,20 @@
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-sensitivities = pickle.load(open('C:/Users/CGAO8/Documents/Code/Results0/sensitivities1.pickle', 'rb'))
-fpadj = pickle.load(open('C:/Users/CGAO8/Documents/Code/Results0/FPratesAdj1.pickle', 'rb'))
-# print(fpadj)
-plt.plot(fpadj, sensitivities)
+experimentPath = 'C:/Users/CGAO8/Documents/Code/experiment1/'
+experimentFiles = os.listdir(experimentPath)
+
+for file in experimentFiles:
+    trialPath = experimentPath+file+'/'
+
+    plt.plot(pickle.load(open(trialPath+'aug_FPratesAdj1.pickle', 'rb')), pickle.load(open(trialPath+'aug_sensitivities1.pickle', 'rb')))
+
 plt.xlabel('Adjusted FPS per scan')
 plt.ylabel('Sensitivity')
-# plt.show()
 
-aug_sensitivities = pickle.load(open('C:/Users/CGAO8/Documents/Code/Results2/aug_sensitivities1.pickle', 'rb'))
-aug_fpadj = pickle.load(open('C:/Users/CGAO8/Documents/Code/Results2/aug_FPratesAdj1.pickle', 'rb'))
-# print(aug_fpadj)
-plt.plot(aug_fpadj, aug_sensitivities)
-# plt.xlabel('Adjusted FPS per scan')
-# plt.ylabel('Sensitivity')
-plt.legend(['original', 'with augmented'])
+print(experimentFiles)
+plt.legend(experimentFiles)
+# plt.savefig('compared.png')
 plt.show()
