@@ -1,5 +1,7 @@
 import keras
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 latent_dim = 200
@@ -17,7 +19,7 @@ def filter_images(images):
     filtered = list()
     unfiltered = list()
     for img in images:
-        if np.mean(img, (1, 2, 3, 4)) > .9:
+        if np.mean(img) > .9:
             filtered.append(img)
         else:
             unfiltered.append(img)
@@ -36,27 +38,29 @@ fig, axs = plt.subplots(3, 6)
 filtered_dir = 'images/filtered/'
 unfiltered_dir = 'images/unfiltered/'
 
+cnt = 0
+k = 1
 for img in filtered:
     for i in range(3):
         for j in range(6):
-            axs[i,j].imshow(0.5 * posdat[k,:,:,cnt,0] + 0.5, cmap='gray')
-            # axs[i, j].imshow(0.5 * posdat[k, :, :, cnt] + 0.5, cmap='gray')
+            axs[i,j].imshow(0.5 * img[:, :, cnt, 0] + 0.5, cmap='gray')
             axs[i,j].axis('off')
             cnt += 1
 
     cnt = 0
-    fig.savefig(filtered + 'test'+str(k)+'.png')
+    fig.savefig(filtered_dir + 'test'+str(k)+'.png')
+    k += 1
 
 for img in unfiltered:
     for i in range(3):
         for j in range(6):
-            axs[i, j].imshow(0.5 * posdat[k, :, :, cnt, 0] + 0.5, cmap='gray')
-            # axs[i, j].imshow(0.5 * posdat[k, :, :, cnt] + 0.5, cmap='gray')
+            axs[i, j].imshow(0.5 * img[:, :, cnt, 0] + 0.5, cmap='gray')
             axs[i, j].axis('off')
             cnt += 1
 
     cnt = 0
-    fig.savefig(unfiltered + 'test' + str(k) + '.png')
+    fig.savefig(unfiltered_dir + 'test' + str(k) + '.png')
+    k += 1
 
-
+print('done')
 
