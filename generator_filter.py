@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from scipy import feature
 
 latent_dim = 200
 
@@ -19,10 +20,13 @@ def filter_images(images):
     filtered = list()
     unfiltered = list()
     for img in images:
+        cannyimg = feature.canny(img, sigma = 3)
         if np.mean(img) > .9:
+            filtered.append(cannyimg)
             filtered.append(img)
         else:
             unfiltered.append(img)
+            unfiltered.append(cannyimg)
 
     return filtered, unfiltered
 
