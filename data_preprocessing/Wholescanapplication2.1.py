@@ -154,10 +154,12 @@ for modelfile in os.listdir(root_trials_dir):
                             nodulesFound.add(node)
                             FP = False
                             TP = True
+                            break
                     for node in fakeNoduleBoxes[seriesID]:
                         if detection in fakeNoduleBoxes[seriesID][node]:
                             fakeNodulesFound.add(node)
                             FP = False
+                            break
                     if FP:
                         FPs += 1
                     if TP:
