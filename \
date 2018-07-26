@@ -25,7 +25,7 @@ def filter_images(images):
     return filtered, unfiltered
 
 
-generator_file = 'our_models/saved_models/experiment5_gen.h5'
+generator_file = 'our_models/saved_models/g1.h5'
 
 generator = load_generator(generator_file)
 fake_images = generate_images(generator, 50)
