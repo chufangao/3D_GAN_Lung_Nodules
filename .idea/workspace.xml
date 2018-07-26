@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b8470e6-03dd-4b51-85f1-751d6a25a768" name="Default" comment="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <change afterPath="$PROJECT_DIR$/generator_filter" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_preprocessing/Wholescanapplication2.1.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_preprocessing/Wholescanapplication2.1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py" beforeDir="false" afterPath="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/showimages.py" beforeDir="false" afterPath="$PROJECT_DIR$/showimages.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,67 +19,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="3DCNNaugmentedtraining2.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
-              <folding>
-                <element signature="e#2097#3293#0" />
-                <element signature="e#3348#3891#0" />
-                <element signature="e#3993#4061#0" />
-                <element signature="e#4106#4178#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Wholescanapplication2.1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_preprocessing/Wholescanapplication2.1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="65" column="45" lean-forward="true" selection-start-line="65" selection-start-column="45" selection-end-line="65" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="showimages.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/showimages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+            <state relative-caret-position="425">
+              <caret line="25" selection-start-line="25" selection-end-line="27" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="showimagesasarrays.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/showimagesasarrays.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="load_model.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/our_models/load_model.py">
+      <file leaf-file-name="pyplot.py" pinned="false" current-in-tab="false">
+        <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="200" column="16" selection-start-line="200" selection-start-column="16" selection-end-line="200" selection-end-column="16" />
+            <state relative-caret-position="189">
+              <caret line="1061" column="4" selection-start-line="1061" selection-start-column="4" selection-end-line="1061" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gantest.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/our_models/gantest.py">
+      <file leaf-file-name="generator_filter" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/generator_filter">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
-              <caret line="63" selection-start-line="63" selection-end-line="63" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CNNinputDataExtractionV3.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_preprocessing/CNNinputDataExtractionV3.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5032">
-              <caret line="301" column="31" selection-start-line="301" selection-start-column="31" selection-end-line="301" selection-end-column="31" />
+            <state relative-caret-position="685">
+              <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -137,10 +104,11 @@
         <option value="$PROJECT_DIR$/models/Wholescanapplication2.1.py" />
         <option value="$PROJECT_DIR$/our_models/3d_wgan_gp2.py" />
         <option value="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining.py" />
-        <option value="$PROJECT_DIR$/showimages.py" />
         <option value="$PROJECT_DIR$/our_models/old_models/3DCNNaugmentedtraining.py" />
         <option value="$PROJECT_DIR$/data_preprocessing/Wholescanapplication2.1.py" />
         <option value="$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py" />
+        <option value="$PROJECT_DIR$/showimages.py" />
+        <option value="$PROJECT_DIR$/generator_filter" />
       </list>
     </option>
   </component>
@@ -169,6 +137,11 @@
             <path>
               <item name="deep_learning_reu" type="b2602c69:ProjectViewProjectNode" />
               <item name="deep_learning_reu" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="deep_learning_reu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="deep_learning_reu" type="462c0819:PsiDirectoryNode" />
               <item name="our_models" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -179,7 +152,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/sclark54/Desktop/deep_learning_reu/models/improved_wgan.py" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/sclark54/Desktop/deep_learning_reu/showimages.py" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -190,6 +163,7 @@
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\our_models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\our_models\saved_models" />
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\images" />
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu" />
       <recent name="C:\Users\sclark54\Desktop\deep_learning_reu\our_models" />
@@ -208,7 +182,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.showimages">
+  <component name="RunManager" selected="Python.generator_filter">
     <configuration name="3d_dc_gan (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="deep_learning_reu" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -263,6 +237,24 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="generator_filter" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="deep_learning_reu" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generator_filter" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="showimages" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="deep_learning_reu" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -286,14 +278,15 @@
       <item itemvalue="Python.3d_dc_gan" />
       <item itemvalue="Python.3d_dc_gan (1)" />
       <item itemvalue="Python.showimages" />
+      <item itemvalue="Python.generator_filter" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.generator_filter" />
         <item itemvalue="Python.showimages" />
         <item itemvalue="Python.3d_dc_gan (1)" />
         <item itemvalue="Python.3d_dc_gan" />
         <item itemvalue="Python.gan" />
-        <item itemvalue="Python.showimages" />
       </list>
     </recent_temporary>
   </component>
@@ -574,34 +567,63 @@
       <option name="project" value="LOCAL" />
       <updated>1532549513893</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Merge branch 'master' of https://github.com/andy1445/deep_learning_reu&#10;&#10;# Conflicts:&#10;#&#9;our_models/3d_wgan_gp2.py">
+      <created>1532616139034</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1532616139034</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="960" y="0" width="960" height="1040" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.4992272" visible="true" weight="0.23777778" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="R Packages" order="3" />
-      <window_info anchor="right" id="R Graphics" order="4" weight="0.3288889" />
+      <window_info anchor="bottom" id="TODO" order="8" weight="0.32890365" />
+      <window_info anchor="bottom" id="Messages" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.47555557" side_tool="true" weight="0.3211517" />
       <window_info anchor="bottom" id="Run" order="5" sideWeight="0.49666667" weight="0.28349945" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.52444446" visible="true" weight="0.3211517" />
-      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.4977778" weight="0.35769656" />
+      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.52444446" weight="0.3211517" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.4977778" weight="0.35769656" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49946696" weight="0.32779622" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.4992272" visible="true" weight="0.23777778" />
+      <window_info anchor="right" id="R Packages" order="3" />
+      <window_info anchor="right" id="R Graphics" order="4" weight="0.3288889" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32890365" />
       <window_info id="Structure" order="0" sideWeight="0.50165015" side_tool="true" weight="0.27222222" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49946696" weight="0.32779622" />
       <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
       <window_info id="Favorites" order="1" sideWeight="0.5007728" side_tool="true" weight="0.27222222" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32890365" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.52444446" visible="true" weight="0.3211517" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.4992272" visible="true" weight="0.23777778" />
+      <window_info id="Structure" order="0" sideWeight="0.50165015" side_tool="true" weight="0.27222222" />
+      <window_info anchor="right" id="R Graphics" order="4" weight="0.3288889" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Run" order="5" sideWeight="0.49666667" weight="0.28349945" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32890365" />
+      <window_info anchor="right" id="R Packages" order="3" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.4977778" weight="0.35769656" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49946696" weight="0.32779622" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.47555557" side_tool="true" weight="0.3211517" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Messages" order="8" />
+      <window_info id="Favorites" order="1" sideWeight="0.5007728" side_tool="true" weight="0.27222222" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -640,9 +662,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/infoGAN_test.py" />
-    <entry file="file://$PROJECT_DIR$/models/gan_test.py" />
-    <entry file="file://$PROJECT_DIR$/our_models/prev_3d_wgan_gp2.py" />
     <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp.py" />
     <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/-313451744/builtins.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -674,13 +693,6 @@
     <entry file="file://$PROJECT_DIR$/nodule300_5.png" />
     <entry file="file://$PROJECT_DIR$/nodule300_8.png" />
     <entry file="file://$PROJECT_DIR$/test11.png" />
-    <entry file="file://$PROJECT_DIR$/showimagesstephen.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/IC3DCNN4.2.py" />
     <entry file="file://$PROJECT_DIR$/models/CNNinputDataExtractionV3.py" />
     <entry file="file://$PROJECT_DIR$/models/IC3DCNN4.2NoIntensity.py" />
@@ -732,35 +744,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="1061" column="4" selection-start-line="1061" selection-start-column="4" selection-end-line="1061" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/showimages.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/our_models/load_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="200" column="16" selection-start-line="200" selection-start-column="16" selection-end-line="200" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2188">
-          <caret line="196" column="47" selection-start-line="196" selection-start-column="47" selection-end-line="196" selection-end-column="47" />
-          <folding>
-            <element signature="e#1223#1238#0" expanded="true" />
-            <element signature="e#14892#17403#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -771,30 +758,97 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/showimagesasarrays.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/data_preprocessing/ValClippedInputDataExtraction.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-70" />
       </provider>
     </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/keras/optimizers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10474">
+          <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+          <folding>
+            <element signature="e#35#73#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data_preprocessing/Wholescanapplication2.1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="65" column="45" lean-forward="true" selection-start-line="65" selection-start-column="45" selection-end-line="65" selection-end-column="45" />
+        <state relative-caret-position="-792">
+          <caret line="141" column="32" lean-forward="true" selection-start-line="141" selection-start-column="32" selection-end-line="141" selection-end-column="32" />
+          <folding>
+            <element signature="e#87#141#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/showimagesasarrays.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="38" selection-start-line="11" selection-start-column="38" selection-end-line="11" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scrollableimages.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/showimagesstephen.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/our_models/3d_wgan_gp2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2219">
+          <caret line="101" column="3" selection-start-line="101" selection-start-column="3" selection-end-line="101" selection-end-column="3" />
+          <folding>
+            <element signature="e#1223#1238#0" expanded="true" />
+            <element signature="e#14892#17403#0" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/our_models/3DCNNaugmentedtraining2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
+        <state relative-caret-position="456">
+          <caret line="228" column="12" selection-start-line="228" selection-start-column="12" selection-end-line="228" selection-end-column="12" />
           <folding>
             <element signature="e#2097#3293#0" />
             <element signature="e#3348#3891#0" />
-            <element signature="e#3993#4061#0" />
             <element signature="e#4106#4178#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="1061" column="4" selection-start-line="1061" selection-start-column="4" selection-end-line="1061" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/showimages.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" selection-start-line="25" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generator_filter">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="685">
+          <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>

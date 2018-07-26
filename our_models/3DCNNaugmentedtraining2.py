@@ -148,7 +148,7 @@ top_threshold = 2446
 bottom_threshold = -1434
 with open("/home/cc/Data/PositiveAugmented.pickle", "rb") as f:
     print("loaded pos data")
-    loadedpos = pickle.load(f)
+    loadedpos = pickle.load(f) #load a list of 40*40*18 ndarrays
 
 cutoff = int(validation_percentage*len(loadedpos))
 valpos = loadedpos[0:cutoff]
