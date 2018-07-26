@@ -5,7 +5,7 @@ import numpy as np
 import pickle
 
 posdat = pickle.load(open('images/gen_nod0.pickle','rb'))
-posdat = pickle.load(open('images/PositiveAugmented.pickle','rb'))
+# posdat = pickle.load(open('images/PositiveAugmented.pickle','rb'))
 
 threshold = .9
 # print(np.average(posdat, axis=(1,2,3,4))); exit()
