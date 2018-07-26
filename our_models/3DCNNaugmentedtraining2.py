@@ -33,6 +33,7 @@ K.set_session(sess)
 import time
 import os
 import shutil
+import sys
 start_time = time.time()
 print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -76,7 +77,7 @@ root_trial_dir = experiment_dir+'trials/'
 os.mkdir(root_trial_dir)
 
 shutil.copyfile(generator_file, records_dir+experiment_name+'_gen.h5')
-shutil.copyfile('3DCNNaugmentedtraining')
+shutil.copyfile(sys.argv[0], records_dir+experiment_name+'_augtraining.py')
 
 def return_model(n = 5, drop_rate_conv = 0.09 , drop_rate_FC = 0.56, learn_rate = 0.00024, num_nodes = 64):
     model = Sequential()

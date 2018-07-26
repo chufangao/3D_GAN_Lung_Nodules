@@ -10,6 +10,7 @@ import tensorflow as tf
 sess = tf.Session()
 
 import os
+import sys
 from numpy.random import uniform
 import keras
 from keras.models import Sequential
@@ -72,10 +73,10 @@ for seriesID in valSeries:
     inputs = np.array(pickle.load(open(savepath + "ValClipped" + seriesID + ".pickle", 'rb')))
     valDict[seriesID] = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)
 
-experiment_name = 'experiment2' #the name of this experiment. used to name files
+experiment_name = 'experiment3' #the name of this experiment. used to name files
 experiment_dir = '/home/cc/deep_learning_reu/our_models/saved_models/'+experiment_name+'/'#the directory where the experiment and it's results will be saved
 records_dir = experiment_dir+'records/' #this directory contains all the code necessary that was run in the experiment
-shutil.copyfile('Wholescanapplication2.1.py',records_dir+experiment_name+'_wholescanapp.py')
+shutil.copyfile(sys.argv[0],records_dir+experiment_name+'_wholescanapp.py')
 root_trials_dir = experiment_dir+'trials/' #this directory contains directories for each trial in the experiment
 
 for modelfile in os.listdir(root_trials_dir):
