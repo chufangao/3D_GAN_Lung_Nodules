@@ -41,7 +41,7 @@ import sys
 BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LATENTDIM = 200
+LATENTDIM = 400
 
 def make_generator():
     if len(sys.argv) > 1 and sys.argv[1] == 'load':
@@ -54,27 +54,28 @@ def make_generator():
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(Reshape((5,5,3,256), input_shape=(256*5*5*3,)))
+   
     model.add(UpSampling3D(size=(2,2,3)))
     #model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,2), padding='same'))
     #model.add(BatchNormalization())
-    #model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(256, (5,5,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
 
     model.add(UpSampling3D(size=(2,2,2)))
     #model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,3), padding='same'))    
     #model.add(BatchNormalization())
-    #model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(256, (5,5,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
 
     model.add(UpSampling3D(size=(2,2,1)))
     #model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,1), padding='same'))    
     #model.add(BatchNormalization())
-    #model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(256, (5,5,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
 
@@ -98,11 +99,11 @@ def make_discriminator():
     model = Sequential()
     model.add(Convolution3D(64, (3,3,3), padding='same', input_shape=(40, 40, 18, 1)))
     model.add(LeakyReLU())
-    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same'))
     model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=2))
     model.add(LeakyReLU())
-    model.add(Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
+    model.add(Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same'))
     model.add(LeakyReLU())
     
     model.add(Flatten())
