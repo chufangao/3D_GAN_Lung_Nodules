@@ -32,6 +32,8 @@ Zsize = 18
 counter = 0
 counterzeta = 0
 savePath = '/home/cc/Data/'
+top_threshold = 2446
+bottom_threshold = -1434
 
 print ("Start")
 slicefail = False
@@ -245,10 +247,12 @@ for i in range(len(allNodules)):
                         slicefail = False
                         takeNegativeSample = False
                     elif (len(postoadd) == Zsize):
-                       # else if valid, add augmented versions
+                        # else if valid, add augmented versions
                         rnum = random.randint(-2, 0)
                         rnum = rnum * (-1)**random.randint(1, 3)
                         postoadd = np.dstack(postoadd)
+                        postoadd = np.clip(postoadd, bottom_threshold, top_threshold)
+
                         if w == 2:
                             np.rot90(postoadd, rnum, axes = (0,1))
                         elif w == 3:
@@ -317,7 +321,18 @@ print ("Negative samples: " + str(len(negativelist)))
 #print (counterx)
 #print (counterzeta)
 with open(savePath+"PositiveAugmented.pickle", 'wb') as handle:
-    pickle.dump(positivelist, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    x_train = positivelist
+    x_train = np.asarray(x_train)
+    x_train = x_train.reshape(
+        (x_train.shape[0], x_train.shape[1], x_train.shape[2], x_train.shape[3], 1))
+    minx = np.amin(x_train)
+    halfRange = (np.amax(x_train) - minx) / 2.0
+    if minx < 0:
+        x_train -= minx
+    x_train = (x_train - halfRange) / halfRange
+
+    pickle.dump(x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    # pickle.dump(positivelist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
 with open(savePath+"NegativeAugmented.pickle", 'wb') as handle:
     pickle.dump(negativelist, handle, protocol=pickle.HIGHEST_PROTOCOL)

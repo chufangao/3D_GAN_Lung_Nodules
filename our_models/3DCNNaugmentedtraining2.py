@@ -230,7 +230,7 @@ for i in range(len(experiment_trials)):
         fake_pos_quantity = int(trial_details[0] * generator_quantity)
         the_noise = np.random.normal(0, 1, (fake_pos_quantity, latent_dim))
         fake_pos_data = example_generator.predict(the_noise)
-        fake_pos_data = denormalize_img(fake_pos_data)
+        # fake_pos_data = denormalize_img(fake_pos_data)
         fake_pos_label = []
         for j in range(len(fake_pos_data)):
             fake_pos_label.append([1, 0])
