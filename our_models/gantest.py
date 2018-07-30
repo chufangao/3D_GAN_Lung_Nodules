@@ -96,20 +96,24 @@ def make_discriminator():
     as possible for real inputs.
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
-    model = Sequential()
-    model.add(Convolution3D(64, (3,3,3), padding='same', input_shape=(40, 40, 18, 1)))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same'))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=2))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same'))
-    model.add(LeakyReLU())
+    gen_image = Input(shape=(40, 40, 18, 1))
+    # std = keras.backend.(gen_image)
+
+    x = Convolution3D(64, (3,3,3), padding='same')(gen_image)
+    x = LeakyReLU()(x)
+    x = Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(x)
+    x = LeakyReLU()(x)
+    x = Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=2)(x)
+    x = LeakyReLU()(x)
+    x = Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(x)
+    x = LeakyReLU()(x)
     
-    model.add(Flatten())
-    model.add(Dense(1024, kernel_initializer='he_normal'))
-    model.add(LeakyReLU())
-    model.add(Dense(1, kernel_initializer='he_normal'))
+    fully_con = Flatten()(x)
+    fully_con = Dense(1024, kernel_initializer='he_normal')(fully_con)
+    fully_con = LeakyReLU()(fully_con)
+    dense_out = Dense(1, kernel_initializer='he_normal')(fully_con)
+
+    model = Model(inputs=gen_image, outputs=dense_out)
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):

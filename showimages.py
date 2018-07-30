@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 
-posdat = pickle.load(open('images/gen_nod1.pickle','rb'))
+posdat = pickle.load(open('images/gen_nod0.pickle','rb'))
 # posdat = pickle.load(open('images/PositiveAugmented.pickle','rb'))
 
 threshold = .9
