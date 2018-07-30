@@ -97,19 +97,30 @@ def make_discriminator():
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
     model = Sequential()
-    model.add(Convolution3D(64, (3,3,3), padding='same', input_shape=(40, 40, 18, 1)))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same'))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=2))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same'))
-    model.add(LeakyReLU())
-    
-    model.add(Flatten())
-    model.add(Dense(1024, kernel_initializer='he_normal'))
-    model.add(LeakyReLU())
-    model.add(Dense(1, kernel_initializer='he_normal'))
+    inp = Input(shape=(40,40,18,1))
+
+    branch1 = Convolution3D(64, (3,3,3), padding='same')(inp)
+    branch1 = LeakyReLU()(branch1)
+    branch1 = Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(branch1)
+    branch1 = LeakyReLU()(branch1)
+    branch1 = Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=2)(branch1)
+    branch1 = LeakyReLU()(branch1)
+    branch1 = Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(branch1)
+    branch1 = LeakyReLU()(branch1)
+    branch1 = Flatten()(branch1)
+
+    avg = Lambda(lambda x: K.mean(x, axis=(1, 2, 3)))(inp)
+    print('avg shape:' + str(avg.shape))
+
+    std = Lambda(lambda x: K.mean(x, axis=(1, 2, 3)))(inp)
+    print('std shape:' + str(std.shape))
+
+    merge = keras.layers.concatenate([branch1, avg, std], axis=1)
+    print('merge shape:' + str(merge.shape))
+
+    model = Dense(1024, kernel_initializer='he_normal')(merge)
+    model = LeakyReLU()(model)
+    model = Dense(1, kernel_initializer='he_normal')(model)
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):
