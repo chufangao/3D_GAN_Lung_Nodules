@@ -20,7 +20,7 @@ import argparse
 import os
 import numpy as np
 from keras.models import Model, Sequential
-from keras.layers import Input, Dense, Reshape, Flatten
+from keras.layers import Input, Dense, Reshape, Flatten, Lambda
 from keras.layers.merge import _Merge
 from keras.layers.convolutional import Convolution3D, UpSampling3D, Conv3DTranspose
 from keras.layers.normalization import BatchNormalization
@@ -121,6 +121,7 @@ def make_discriminator():
     model = Dense(1024, kernel_initializer='he_normal')(merge)
     model = LeakyReLU()(model)
     model = Dense(1, kernel_initializer='he_normal')(model)
+    model = keras.Model(inputs=inp, outputs=model)
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):
