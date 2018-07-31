@@ -308,7 +308,7 @@ for epoch in range(10001):
         #    pickle.dump(dloss_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # save model
-        discriminator.save('saved_models/d'+str(alt)+'.h5')
-        generator.save('saved_models/g'+str(alt)+'.h5')
+        discriminator.save('saved_models/d'+str(alt+2)+'.h5')
+        generator.save('saved_models/g'+str(alt+2)+'.h5')
         alt = 1 - alt
 
