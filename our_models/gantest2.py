@@ -108,6 +108,8 @@ def make_discriminator():
     branch1 = Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(branch1)
     branch1 = LeakyReLU()(branch1)
     branch1 = Flatten()(branch1)
+    print('b1 shape:'+str(branch1.shape))
+    print(branch1.shape[0])
 
     avg = Lambda(lambda x: K.mean(x, axis=(1, 2, 3)))(inp)
     print('avg shape:' + str(avg.shape))

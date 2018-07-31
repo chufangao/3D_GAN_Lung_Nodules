@@ -179,14 +179,15 @@ class RandomWeightedAverage(_Merge):
 x_train = None
 with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
+'
 x_train = np.asarray(x_train)
 x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
-
 minx = np.amin(x_train)
 halfRange = (np.amax(x_train) - minx)/2.0
 if minx < 0:
     x_train -= minx
 x_train = (x_train - halfRange) / halfRange
+'
 #plt.imsave('test.png',x_train[0,:,:,9,0])
 #print(np.amax(x_train), np.amin(x_train)); exit()
 
