@@ -34,6 +34,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys
+from collections import deque
 
 #usage
 # gantest.py load gen.h5 disc.h5
@@ -113,22 +114,17 @@ def make_discriminator():
 
     avg = Lambda(lambda x: K.mean(x, axis=(1, 2, 3)))(inp)
     print('avg shape:' + str(avg.shape))
-    avg = keras.layers.concatenate([avg for i in range(5)])
-    avg = Dropout(.3)(avg)
 
     std = Lambda(lambda x: K.mean(x, axis=(1, 2, 3)))(inp)
     print('std shape:' + str(std.shape))
-    std = keras.layers.concatenate([std for i in range(5)])
-    std = Dropout(.3)(std)
 
     merge = keras.layers.concatenate([branch1, avg, std], axis=1)
     print('merge shape:' + str(merge.shape))
 
-    #model = Dropout(.3)(merge)
-    #model = Dense(1024, kernel_initializer='he_normal')(model)
-    model = Dense(1024, kernel_initializer='he_normal')(merge)
+    model = Dropout(.3)(merge)
+    model = Dense(1024, kernel_initializer='he_normal')(model)
     model = LeakyReLU()(model)
-    #model = Dropout(.3)(model)
+    model = Dropout(.3)(model)
     model = Dense(1, kernel_initializer='he_normal')(model)
     model = keras.Model(inputs=inp, outputs=model)
     return model
@@ -287,49 +283,41 @@ dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 
 # make an alt variable for saving purposes so we don't run out of space
 alt = 0
-dloss_list = []
+# for experience replay
+last_3gen = deque([generator.predict(np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))) for i in range(3)])
+discriminator.compile(optimizer=Adam(0.0001, beta_1=0.5, beta_2=0.9), loss=wasserstein_loss)
 
-def showimg(posdat, targetdir):
-    fig, axs = plt.subplots(3, 6)
-
-    cnt = 0
-    for k in range(0, 50):
-        for i in range(3):
-            for j in range(6):
-                axs[i,j].imshow(0.5 * posdat[k,:,:,cnt,0] + 0.5, cmap='gray')
-                # axs[i, j].imshow(0.5 * posdat[k, :, :, cnt] + 0.5, cmap='gray')
-                axs[i,j].axis('off')
-                cnt += 1
-
-            cnt = 0
-            fig.savefig(targetdir+'test'+str(k)+'.png')
+#dloss_list = []
 
 print('entering training loop')
 for epoch in range(10001):
     the_noise = np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))
     d_loss = []
     g_loss = []
-
+    # train critic
     for d_update in range(TRAINING_RATIO):
         print('d_update',d_update)
         batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
         image_batch = x_train[batch_indices]
         d_loss = discriminator_model.train_on_batch([image_batch, the_noise], [positive_y, negative_y, dummy_y])
-
+    # train generator
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, LATENTDIM), positive_y)
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
-    dloss_list.append(d_loss[0])
+    #dloss_list.append(d_loss[0])
 
+    # save generated images for experience replay
+    last_3gen.append(generator.predict(np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))))
+    #batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
+    #image_batch = x_train[batch_indices]
+    #discriminator_model.train_on_batch([image_batch, last_3gen.popleft()], [positive_y, negative_y, dummy_y])
+    discriminator.train_on_batch(last_3gen.popleft(), negative_y)
+    
+    # save images and models
     if epoch % 10 == 0:
-        # save images
         the_fakes = generator.predict(np.random.normal(0, 1, (50, LATENTDIM)))
-        #path = '../images/'+str(epoch)+'/'
-        #if(not os.path.exists(path)):
-        #    os.mkdir('../images/'+str(epoch))
+
         with open('../images/gen_nod'+str(alt)+'.pickle', 'wb') as handle:
             pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        #showimg(the_fakes, path)
-        
         # save dloss over time
         #with open('../desktop/dloss_list'+str(alt)+'.pickle', 'wb') as handle:
         #    pickle.dump(dloss_list, handle, protocol=pickle.HIGHEST_PROTOCOL)

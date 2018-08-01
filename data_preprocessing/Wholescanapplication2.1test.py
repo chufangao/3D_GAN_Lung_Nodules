@@ -68,7 +68,7 @@ with open(savepath+"workingValidationSeries.pickle", "rb") as f:
     valSeries = pickle.load(f)
 numScans = len(valSeries)
 
-experiment_name = 'experimenttest' #the name of this experiment. used to name files
+experiment_name = sys.argv[1]  #the name of this experiment. used to name files
 experiment_dir = '/home/cc/deep_learning_reu/our_models/saved_models/'+experiment_name+'/'#the directory where the experiment and it's results will be saved
 records_dir = experiment_dir+'records/' #this directory contains all the code necessary that was run in the experiment
 shutil.copyfile(sys.argv[0],records_dir+experiment_name+'_wholescanapp.py')

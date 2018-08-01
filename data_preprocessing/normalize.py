@@ -34,5 +34,5 @@ def processAug(path):
     pickle.dump(x_train.astype('float32'), open(path,'wb'), protocol=pickle.HIGHEST_PROTOCOL)
 
 
-processAug('/home/cc/Data/NegativeAugmented.pickle')
-
+#processAug('/home/cc/Data/NegativeAugmented.pickle')
+processValidation(path)

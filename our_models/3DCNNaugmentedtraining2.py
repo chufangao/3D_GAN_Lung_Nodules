@@ -45,18 +45,18 @@ grayscale = 1
 
 #the name of the experiment; used to create a directory to store results
 #experiment_name = 'experiment6'
-experiment_name = sys.args[1]
+experiment_name = sys.argv[1]
 
 EPOCHS = 20
 #the size of the noise vector
 latent_dim = 200
 
 #the number of fake positive examples and real negative examples to add to the base data set for each trial
-#experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
-#experiment_trials = [[.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
-#experiment_trials = [[.3,0], [.4, 0], [.5,0], [.3,.3], [.4,.4], [.5,.5]]
-#experiment_trials = [[.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3]]
-experiment_trials = [[.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,.4], [.4,.4], [.4,.4], [.4,.4]]
+experiment_trials = [[0,0], [.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]]
+experiment_trials.extend([[.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]])
+experiment_trials.extend([[.3,0], [.4, 0], [.5,0], [.3,.3], [.4,.4], [.5,.5]])
+experiment_trials.extend([[.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3]])
+experiment_trials.extend([[.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,0], [.4,.4], [.4,.4], [.4,.4], [.4,.4]])
 
 #these examples are taken equally from both the positive and negative examples
 validation_percentage = .2

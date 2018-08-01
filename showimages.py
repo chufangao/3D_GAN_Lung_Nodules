@@ -15,7 +15,7 @@ print(posdat.shape)
 fig, axs = plt.subplots(3, 6)
 
 cnt = 0
-for k in range(0, 16):
+for k in range(0, 50):
     for i in range(3):
         for j in range(6):
             axs[i,j].imshow(0.5 * posdat[k,:,:,cnt,0] + 0.5, cmap='gray')
@@ -24,4 +24,4 @@ for k in range(0, 16):
             cnt += 1
 
     cnt = 0
-    fig.savefig('test'+str(k)+'.png')
+    fig.savefig('images/test'+str(k)+'.png')
