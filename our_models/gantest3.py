@@ -43,6 +43,10 @@ BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
 LATENTDIM = 400
+SAVEPNG = False # true if generated images be saved as pngs (slow), false if they should be saved as pickle files
+OVERWRITEIMAGES = False # true if newly generated images should overwrite existing ones, false if they should not
+IMAGEDIR =  '../images/' #the directory images will be saved in, must include slash at the end
+
 
 def make_generator():
     if len(sys.argv) > 1 and sys.argv[1] == 'load':
@@ -114,17 +118,22 @@ def make_discriminator():
 
     avg = Lambda(lambda x: K.mean(x, axis=(1, 2, 3)))(inp)
     print('avg shape:' + str(avg.shape))
+    avg = keras.layers.concatenate([avg for i in range(5)])
+    avg = Dropout(.3)(avg)
 
     std = Lambda(lambda x: K.mean(x, axis=(1, 2, 3)))(inp)
     print('std shape:' + str(std.shape))
+    std = keras.layers.concatenate([std for i in range(5)])
+    std = Dropout(.3)(std)
 
     merge = keras.layers.concatenate([branch1, avg, std], axis=1)
     print('merge shape:' + str(merge.shape))
 
-    model = Dropout(.3)(merge)
-    model = Dense(1024, kernel_initializer='he_normal')(model)
+    #model = Dropout(.3)(merge)
+    #model = Dense(1024, kernel_initializer='he_normal')(model)
+    model = Dense(1024, kernel_initializer='he_normal')(merge)
     model = LeakyReLU()(model)
-    model = Dropout(.3)(model)
+    #model = Dropout(.3)(model)
     model = Dense(1, kernel_initializer='he_normal')(model)
     model = keras.Model(inputs=inp, outputs=model)
     return model
@@ -176,6 +185,21 @@ def wasserstein_loss(y_true, y_pred):
 
     Note that the nature of this loss means that it can be (and frequently will be) less than 0."""
     return K.mean(y_true * y_pred)
+
+def showimg(posdat, targetdir):
+    fig, axs = plt.subplots(3, 6)
+
+    cnt = 0
+    for k in range(0, 50):
+        for i in range(3):
+            for j in range(6):
+                axs[i,j].imshow(0.5 * posdat[k,:,:,cnt,0] + 0.5, cmap='gray')
+                # axs[i, j].imshow(0.5 * posdat[k, :, :, cnt] + 0.5, cmap='gray')
+                axs[i,j].axis('off')
+                cnt += 1
+
+            cnt = 0
+            fig.savefig(targetdir+'test'+str(k)+'.png')
 
 class RandomWeightedAverage(_Merge):
     """Takes a randomly-weighted average of two tensors. In geometric terms, this outputs a random point on the line
@@ -316,11 +340,17 @@ for epoch in range(10001):
     if epoch % 10 == 0:
         the_fakes = generator.predict(np.random.normal(0, 1, (50, LATENTDIM)))
 
-        with open('../images/gen_nod'+str(alt)+'.pickle', 'wb') as handle:
-            pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        # save dloss over time
-        #with open('../desktop/dloss_list'+str(alt)+'.pickle', 'wb') as handle:
-        #    pickle.dump(dloss_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        path = IMAGEDIR + ('' if OVERWRITEIMAGES else str(epoch)+'/')
+        if(not os.path.exists(path)):
+           os.mkdir(path)
+
+        if SAVEPNG:
+            showimg(the_fakes, path)
+        else:
+            with open(path+'gen_nod'+str(alt+2)+'.pickle', 'wb') as handle:
+                pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
 
         # save model
         discriminator.save('saved_models/d'+str(alt+2)+'.h5')
