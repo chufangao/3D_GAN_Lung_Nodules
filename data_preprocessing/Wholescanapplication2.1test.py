@@ -50,9 +50,12 @@ XYstride = 20
 Zstride = 9
 
 
-thresholds = [x/100 for x in list(range(1, 100))]
-thresholds.extend([x/1000 for x in list(range(991, 1000))])
-thresholds.extend([x/10000 for x in list(range(9991, 10000))])
+thresholds = [x/50.0 for x in list(range(1, 50))]
+thresholds.extend([x/1000.0 for x in list(range(991, 1000))])
+thresholds.extend([x/10000.0 for x in list(range(9991, 10000))])
+thresholds.extend([x/100000.0 for x in list(range(99991, 100000))])
+thresholds.extend([x/1000000.0 for x in list(range(999991, 1000000))])
+
 savepath = '/home/cc/Data/'
 noduleBoxes = None
 with open(savepath+"noduleBoxes.pickle", "rb") as f:
@@ -153,12 +156,10 @@ for seriesID in valSeries:
                             nodulesFound.add(node)
                             FP = False
                             TP = True
-                            break
                     for node in fakeNoduleBoxes[seriesID]:
                         if detection in fakeNoduleBoxes[seriesID][node]:
                             fakeNodulesFound.add(node)
                             FP = False
-                            break
                     if FP:
                         FPs += 1
                     if TP:
@@ -167,7 +168,6 @@ for seriesID in valSeries:
             experimentDict[modelfile]['numFakesDetected'][num] += len(fakeNodulesFound)
             experimentDict[modelfile]['sumofFPs'][num] += FPs
             experimentDict[modelfile]['sumofTPs'][num] += TPs
-
 
 # post process the data
 for modelfile in files:
