@@ -41,7 +41,7 @@ import sys
 BATCH_SIZE = 32
 TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates per generator update. The paper uses 5.
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
-LATENTDIM = 200
+LATENTDIM = 400
 
 def make_generator():
     if len(sys.argv) > 1 and sys.argv[1] == 'load':
@@ -54,27 +54,28 @@ def make_generator():
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(Reshape((5,5,3,256), input_shape=(256*5*5*3,)))
+   
     model.add(UpSampling3D(size=(2,2,3)))
     #model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,2), padding='same'))
     #model.add(BatchNormalization())
-    #model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(256, (5,5,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
 
     model.add(UpSampling3D(size=(2,2,2)))
     #model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,3), padding='same'))    
     #model.add(BatchNormalization())
-    #model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(256, (5,5,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
 
     model.add(UpSampling3D(size=(2,2,1)))
     #model.add(Conv3DTranspose(128, (6, 6, 4), strides=(2,2,1), padding='same'))    
     #model.add(BatchNormalization())
-    #model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), padding='same'))
+    model.add(LeakyReLU())
+    model.add(Convolution3D(256, (5,5,3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
 
@@ -95,20 +96,24 @@ def make_discriminator():
     as possible for real inputs.
 
     Note that the improved WGAN paper suggests that BatchNormalization should not be used in the discriminator."""
-    model = Sequential()
-    model.add(Convolution3D(64, (3,3,3), padding='same', input_shape=(40, 40, 18, 1)))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
-    model.add(LeakyReLU())
-    model.add(Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=[2,2,2], padding='same'))
-    model.add(LeakyReLU())
+    gen_image = Input(shape=(40, 40, 18, 1))
+    # std = keras.backend.(gen_image)
+
+    x = Convolution3D(64, (3,3,3), padding='same')(gen_image)
+    x = LeakyReLU()(x)
+    x = Convolution3D(128, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(x)
+    x = LeakyReLU()(x)
+    x = Convolution3D(256, (3,3,3), kernel_initializer='he_normal', strides=2)(x)
+    x = LeakyReLU()(x)
+    x = Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(x)
+    x = LeakyReLU()(x)
     
-    model.add(Flatten())
-    model.add(Dense(1024, kernel_initializer='he_normal'))
-    model.add(LeakyReLU())
-    model.add(Dense(1, kernel_initializer='he_normal'))
+    fully_con = Flatten()(x)
+    fully_con = Dense(1024, kernel_initializer='he_normal')(fully_con)
+    fully_con = LeakyReLU()(fully_con)
+    dense_out = Dense(1, kernel_initializer='he_normal')(fully_con)
+
+    model = Model(inputs=gen_image, outputs=dense_out)
     return model
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples, gradient_penalty_weight):
@@ -174,14 +179,15 @@ class RandomWeightedAverage(_Merge):
 x_train = None
 with open('/home/cc/Data/PositiveAugmented.pickle', 'rb') as f:
     x_train = pickle.load(f)
+'
 x_train = np.asarray(x_train)
 x_train = x_train.reshape((x_train.shape[0], x_train.shape[1],x_train.shape[2],x_train.shape[3], 1))
-
 minx = np.amin(x_train)
 halfRange = (np.amax(x_train) - minx)/2.0
 if minx < 0:
     x_train -= minx
 x_train = (x_train - halfRange) / halfRange
+'
 #plt.imsave('test.png',x_train[0,:,:,9,0])
 #print(np.amax(x_train), np.amin(x_train)); exit()
 

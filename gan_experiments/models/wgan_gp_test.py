@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 import sys
 
 import numpy as np
-
+import time
+start_time = time.time()
 
 class RandomWeightedAverage(_Merge):
     """Provides a (random) weighted average between real and generated image samples"""
@@ -206,11 +207,12 @@ class WGANGP():
             g_loss = self.generator_model.train_on_batch(noise, valid)
             assert d_loss is not None
             # Plot the progress
-            print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
+            #print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
 
             # If at save interval => save generated image samples
             if epoch % sample_interval == 0:
-                self.sample_images(epoch)
+                pass
+                #self.sample_images(epoch)
                 # self.save_model()
 
     def sample_images(self, epoch):
@@ -248,4 +250,5 @@ class WGANGP():
 
 if __name__ == '__main__':
     wgan = WGANGP()
-    wgan.train(epochs=1000000, batch_size=32, sample_interval=50)
+    wgan.train(epochs=100, batch_size=32, sample_interval=50)
+    print("--- %s seconds ---" % (time.time() - start_time))

@@ -153,7 +153,7 @@ for seriesID in seriesIDs:
                 for boxX in allboxXs:
                     box = [boxX, boxY, boxZ]
                     # append colume to testlist
-                    testlist.append(createInput(box, imageDict))
+                    testlist.append(np.clip(createInput(box, imageDict), bottom_threshold, top_threshold))
                     # append box region to respective dataset
                     for nodeID in nodules:
                         checkedint = checkIntersect(nodeID, box, imageDict)
@@ -182,7 +182,16 @@ for seriesID in seriesIDs:
             sliceamounts.append(len(imageDict))
             workinglist.append(seriesID)                  
             with open(savePath+"ValClipped" + filestring + ".pickle", 'wb') as handle:
-                pickle.dump(testlist, handle, protocol=pickle.HIGHEST_PROTOCOL)
+                x_train = testlist
+                x_train = np.asarray(x_train)
+                x_train = x_train.reshape((x_train.shape[0], x_train.shape[1], x_train.shape[2], x_train.shape[3], 1))
+                minx = np.amin(x_train)
+                halfRange = (np.amax(x_train) - minx) / 2.0
+                if minx < 0:
+                    x_train -= minx
+                x_train = (x_train - halfRange) / halfRange
+
+                pickle.dump(x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
         else:
             brokenlist.append(seriesID)
         counterFile += 1

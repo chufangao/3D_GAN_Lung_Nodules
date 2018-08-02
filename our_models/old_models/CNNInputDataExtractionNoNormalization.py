@@ -251,6 +251,7 @@ for i in range(len(allNodules)):
                         rnum = random.randint(-2, 0)
                         rnum = rnum * (-1)**random.randint(1, 3)
                         postoadd = np.dstack(postoadd)
+                        #postoadd = np.clip(postoadd, bottom_threshold, top_threshold)
 
                         if w == 2:
                             np.rot90(postoadd, rnum, axes = (0,1))
@@ -277,7 +278,6 @@ for i in range(len(allNodules)):
                                 np.rot90(postoadd, rnum, axes = (1,2))
                         if postoadd.shape == (40,40,18):
                             positivelist.append(postoadd)
-                            del postoadd
                         else:
                             print('nodeID faied: ', nodeID,'\nseriesID: ', seriesID)
                             takeNegativeSample = False
@@ -322,8 +322,8 @@ print ("Negative samples: " + str(len(negativelist)))
 #print (counterx)
 #print (counterzeta)
 with open(savePath+"PositiveAugmented.pickle", 'wb') as handle:
-    #x_train = np.array(positivelist)
-    #x_train = np.clip(x_train, bottom_threshold, top_threshold)
+    #x_train = positivelist
+    #x_train = np.asarray(x_train)
     #x_train = x_train.reshape(
     #    (x_train.shape[0], x_train.shape[1], x_train.shape[2], x_train.shape[3], 1))
     #minx = np.amin(x_train)
@@ -331,6 +331,7 @@ with open(savePath+"PositiveAugmented.pickle", 'wb') as handle:
     #if minx < 0:
     #    x_train -= minx
     #x_train = (x_train - halfRange) / halfRange
+
     #pickle.dump(x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
     pickle.dump(positivelist, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
