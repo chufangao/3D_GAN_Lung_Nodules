@@ -35,6 +35,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys
 from collections import deque
+import random
 
 #usage
 # gantest.py load gen.h5 disc.h5
@@ -44,7 +45,7 @@ TRAINING_RATIO = 5  # The training ratio is the number of discriminator updates 
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
 LATENTDIM = 400
 SAVEPNG = False # true if generated images be saved as pngs (slow), false if they should be saved as pickle files
-OVERWRITEIMAGES = False # true if newly generated images should overwrite existing ones, false if they should not
+OVERWRITEIMAGES = True # true if newly generated images should overwrite existing ones, false if they should not
 IMAGEDIR =  '../images/' #the directory images will be saved in, must include slash at the end
 
 
@@ -84,7 +85,9 @@ def make_generator():
     model.add(BatchNormalization())
     model.add(LeakyReLU())
 
-
+    model.add(Convolution3D(256, (5,5,3), padding='same'))
+    model.add(BatchNormalization())
+    model.add(LeakyReLU())
     # Because we normalized training inputs to lie in the range [-1, 1],
     # the tanh function should be used for the output of the generator to ensure its output
     # also lies in this range.
@@ -113,6 +116,7 @@ def make_discriminator():
     branch1 = Convolution3D(512, (3,3,3), kernel_initializer='he_normal', strides=2, padding='same')(branch1)
     branch1 = LeakyReLU()(branch1)
     branch1 = Flatten()(branch1)
+    '''
     print('b1 shape:'+str(branch1.shape))
     print(branch1.shape[0])
 
@@ -128,10 +132,10 @@ def make_discriminator():
 
     merge = keras.layers.concatenate([branch1, avg, std], axis=1)
     print('merge shape:' + str(merge.shape))
-
+    '''
     #model = Dropout(.3)(merge)
     #model = Dense(1024, kernel_initializer='he_normal')(model)
-    model = Dense(1024, kernel_initializer='he_normal')(merge)
+    model = Dense(1024, kernel_initializer='he_normal')(branch1)
     model = LeakyReLU()(model)
     #model = Dropout(.3)(model)
     model = Dense(1, kernel_initializer='he_normal')(model)
@@ -311,7 +315,6 @@ alt = 0
 last_3gen = deque([generator.predict(np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))) for i in range(3)])
 discriminator.compile(optimizer=Adam(0.0001, beta_1=0.5, beta_2=0.9), loss=wasserstein_loss)
 
-#dloss_list = []
 
 print('entering training loop')
 for epoch in range(10001):
@@ -327,18 +330,14 @@ for epoch in range(10001):
     # train generator
     g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE, LATENTDIM), positive_y)
     print("%d [D loss: %f] [G loss: %f]" % (epoch, d_loss[0], g_loss))
-    #dloss_list.append(d_loss[0])
 
     # save generated images for experience replay
     last_3gen.append(generator.predict(np.random.normal(0, 1, (BATCH_SIZE, LATENTDIM))))
-    #batch_indices = np.random.randint(0, x_train.shape[0], BATCH_SIZE)
-    #image_batch = x_train[batch_indices]
-    #discriminator_model.train_on_batch([image_batch, last_3gen.popleft()], [positive_y, negative_y, dummy_y])
     discriminator.train_on_batch(last_3gen.popleft(), negative_y)
     
     # save images and models
     if epoch % 10 == 0:
-        the_fakes = generator.predict(np.random.normal(0, 1, (50, LATENTDIM)))
+        the_fakes = generator.predict(np.random.normal(0, 1, (32, LATENTDIM)))
 
         path = IMAGEDIR + ('' if OVERWRITEIMAGES else str(epoch)+'/')
         if(not os.path.exists(path)):
@@ -349,9 +348,6 @@ for epoch in range(10001):
         else:
             with open(path+'gen_nod'+str(alt+2)+'.pickle', 'wb') as handle:
                 pickle.dump(the_fakes, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-
         # save model
         discriminator.save('saved_models/d'+str(alt+2)+'.h5')
         generator.save('saved_models/g'+str(alt+2)+'.h5')
