@@ -90,10 +90,10 @@ for modelfile in files:
     # experimentDict[modelfile]['FPrates'] = []
     # experimentDict[modelfile]['sensitivities'] = []
     # experimentDict[modelfile]['fakeSensitivities'] = []
-    experimentDict[modelfile]['sumofFPs'] = [0 for i in range(len(thresholds))]
-    experimentDict[modelfile]['sumofTPs'] = [0 for i in range(len(thresholds))]
-    experimentDict[modelfile]['numDetected'] = [0 for i in range(len(thresholds))]
-    experimentDict[modelfile]['numFakesDetected'] = [0 for i in range(len(thresholds))]
+    experimentDict[modelfile]['sumofFPs'] = np.zeros(len(thresholds))
+    experimentDict[modelfile]['sumofTPs'] = np.zeros(len(thresholds))
+    experimentDict[modelfile]['numDetected'] = np.zeros(len(thresholds))
+    experimentDict[modelfile]['numFakesDetected'] = np.zeros(len(thresholds))
     # experimentDict[modelfile]['numNodules'] = 0
     # experimentDict[modelfile]['numFakes'] = 0
 
@@ -141,36 +141,42 @@ for seriesID in valSeries:
     # iterate through each trial and test on this validation seriesid
     for modelfile in files:
         predictions = experimentDict[modelfile]['modelx'].predict(inputs, batch_size=48)
-        #iterate over every threshold
-        for num in range(len(thresholds)):
-            FPs = 0
-            TPs = 0
-            nodulesFound = set()
-            fakeNodulesFound = set()
+        nodulesFound = set()
+        fakeNodulesFound = set()
+        thresholds = np.sort(thresholds)
+        # thresholds = reversed(thresholds) # must reverse thresholds in order to avoid rebuilding nodulesFound
 
-            #for each threshold "num" iterate over every prediction "i"
-            for i in range(len(predictions)):
-                if predictions[i][0] >= thresholds[num]:
-                    detection = coords[i]
-                    FP = True
-                    TP = False
-                    for node in noduleBoxes[seriesID]:
-                        if detection in noduleBoxes[seriesID][node]:
+        fpArr = np.zeros(len(thresholds))
+        tpArr = np.zeros(len(thresholds))
+        nodulesFoundArr = np.zeros(len(thresholds))
+        fakeNodulesFoundArr = np.zeros(len(thresholds))
+
+        for i in range(len(predictions)):
+            threshold_index = thresholds.searchsorted(predictions[i][0], side='right')
+            if threshold_index > 0:
+                FP = True
+                TP = False
+                for node in noduleBoxes[seriesID]:
+                    if coords[i] in noduleBoxes[seriesID][node]:
+                        if not node in nodulesFound:
                             nodulesFound.add(node)
-                            FP = False
-                            TP = True
-                    for node in fakeNoduleBoxes[seriesID]:
-                        if detection in fakeNoduleBoxes[seriesID][node]:
+                            nodulesFoundArr[:threshold_index] += 1
+                        FP = False
+                        TP = True
+                for node in fakeNoduleBoxes[seriesID]:
+                    if coords[i] in fakeNoduleBoxes[seriesID][node]:
+                        if not node in fakeNodulesFound:
                             fakeNodulesFound.add(node)
-                            FP = False
-                    if FP:
-                        FPs += 1
-                    if TP:
-                        TPs += 1
-            experimentDict[modelfile]['numDetected'][num] += len(nodulesFound)
-            experimentDict[modelfile]['numFakesDetected'][num] += len(fakeNodulesFound)
-            experimentDict[modelfile]['sumofFPs'][num] += FPs
-            experimentDict[modelfile]['sumofTPs'][num] += TPs
+                            fakeNodulesFoundArr[:threshold_index] += 1
+                        FP = False
+                if FP:
+                    fpArr[:threshold_index] += 1
+                if TP:
+                    fpArr[:threshold_index] += 1
+        experimentDict[modelfile]['numDetected'] += nodulesFoundArr
+        experimentDict[modelfile]['numFakesDetected'] += nodulesFoundArr
+        experimentDict[modelfile]['sumofFPs'] += fpArr
+        experimentDict[modelfile]['sumofTPs'] += fpArr
 
 # post process the data
 for modelfile in files:
