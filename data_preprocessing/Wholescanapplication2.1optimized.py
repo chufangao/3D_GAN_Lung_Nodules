@@ -141,6 +141,7 @@ for seriesID in valSeries:
     # iterate through each trial and test on this validation seriesid
     for modelfile in files:
         predictions = experimentDict[modelfile]['modelx'].predict(inputs, batch_size=48)
+
         nodulesFound = set()
         fakeNodulesFound = set()
         thresholds = np.sort(thresholds)
