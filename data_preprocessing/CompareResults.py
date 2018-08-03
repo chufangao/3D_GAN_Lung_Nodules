@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-experimentPath = 'C:/Users/CGAO8/Documents/Deep Learning Practice/images/experiment6/trials/'
+experimentPath = 'C:/Users/CGAO8/Documents/Deep Learning Practice/images/experiment7keep/trials/'
 # experimentFiles = os.listdir(experimentPath)
 # thresholds = [x/100 for x in list(range(1, 100))]
 # thresholds.extend([x/1000 for x in list(range(991, 1000))])
