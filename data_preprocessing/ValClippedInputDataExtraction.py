@@ -182,6 +182,7 @@ for seriesID in seriesIDs:
             sliceamounts.append(len(imageDict))
             workinglist.append(seriesID)                  
             with open(savePath+"ValClipped" + filestring + ".pickle", 'wb') as handle:
+                '''
                 x_train = testlist
                 x_train = np.asarray(x_train)
                 x_train = x_train.reshape((x_train.shape[0], x_train.shape[1], x_train.shape[2], x_train.shape[3], 1))
@@ -192,6 +193,8 @@ for seriesID in seriesIDs:
                 x_train = (x_train - halfRange) / halfRange
 
                 pickle.dump(x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
+                '''
+                pickle.dump(testlist, handle, protocol=pickle.HIGHEST_PROTOCOL)
         else:
             brokenlist.append(seriesID)
         counterFile += 1
