@@ -50,9 +50,12 @@ experiment_name = sys.argv[1]
 EPOCHS = 20
 #the size of the noise vector
 latent_dim = 400
+#the file containing the model for generating new training data
+generator_file = 'saved_models/g3.h5'
 
 #the number of fake positive examples and real negative examples to add to the base data set for each trial
-experiment_trials = [[.3,0], [.4,0], [.5,0], [.3,.3], [.4,.4], [.5,.5], [1,1]]
+experiment_trials = [[0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]]
+#experiment_trials = [[0,0], [.3,0], [.4,0], [.5,0], [.3,.3], [.4,.4], [.5,.5], [1,1]]
 #experiment_trials.extend([[.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]])
 #experiment_trials.extend([[.3,0], [.4, 0], [.5,0], [.3,.3], [.4,.4], [.5,.5]])
 #experiment_trials.extend([[.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3], [.3,.3]])
@@ -60,9 +63,6 @@ experiment_trials = [[.3,0], [.4,0], [.5,0], [.3,.3], [.4,.4], [.5,.5], [1,1]]
 
 #these examples are taken equally from both the positive and negative examples
 validation_percentage = .2
-
-#the file containing the model for generating new training data
-generator_file = 'saved_models/g2.h5'
 
 #the directory for saving models
 target_directory = 'saved_models/'
