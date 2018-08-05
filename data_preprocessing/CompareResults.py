@@ -3,50 +3,62 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-experimentPath = 'C:/Users/CGAO8/Documents/Deep Learning Practice/images/experiment7keep/trials/'
-# experimentFiles = os.listdir(experimentPath)
-# thresholds = [x/100 for x in list(range(1, 100))]
-# thresholds.extend([x/1000 for x in list(range(991, 1000))])
-# thresholds.extend([x/10000 for x in list(range(9991, 10000))])
-actualFiles = []
-labels = []
 
-totalFPrate = []
-totalSens = []
-for file in os.listdir(experimentPath):
-    trialPath = experimentPath+file+'/'
-    try:
-        if file == 'control':
-            print((pickle.load(open(trialPath+'aug_FPratesAdj1.pickle', 'rb')), pickle.load(open(trialPath+'aug_sensitivities1.pickle', 'rb'))))
-            plt.plot(pickle.load(open(trialPath+'aug_FPratesAdj1.pickle', 'rb')), pickle.load(open(trialPath+'aug_sensitivities1.pickle', 'rb')), 'r--')
-            labels.append('control')
-        else:
-            # totalFPrate.extend(pickle.load(open(trialPath + 'aug_FPratesAdj1.pickle', 'rb')))
-            # totalSens.extend(pickle.load(open(trialPath + 'aug_sensitivities1.pickle', 'rb')))
-            plt.plot(pickle.load(open(trialPath + 'aug_FPratesAdj1.pickle', 'rb')),
-                     pickle.load(open(trialPath + 'aug_sensitivities1.pickle', 'rb')))
-        actualFiles.append(file)
-    except:
-        pass
-    # plt.plot(thresholds,
-    #          pickle.load(open(trialPath + 'aug_sensitivities1.pickle', 'rb')))
+def graphOne(experimentPath, labels):
+    for file in os.listdir(experimentPath)[1:]:
+        trialPath = experimentPath + file + '/'
+        try:
+            plt.plot(pickle.load(open(trialPath + 'aug_FPratesAdj1.pickle', 'rb')), pickle.load(open(trialPath + 'aug_sensitivities1.pickle', 'rb')))
+        except:
+            pass
 
-# print(len(totalFPrate), len(totalSens))
-# plt.scatter(totalFPrate, totalSens, marker='.'); labels.append('.3 aug scatterplot')
-# z = np.polyfit(totalFPrate, totalSens, 14)
-# labels.append('.3 aug fitted line')
-# xp = np.linspace(100, 500, 100)
-# plt.plot(xp, np.poly1d(z)(xp), 'g')
-plt.xlabel('Adjusted False Positives per Scan')
-plt.ylabel('Sensitivity')
+    plt.xlabel('Adjusted False Positives per Scan')
+    plt.ylabel('Sensitivity')
+    plt.legend(labels)
+    plt.show()
 
-# for i in actualFiles:
-#     if i in ['trial_0','trial_1','trial_2','trial_3','trial_5','trial_6','trial_7']:
-#         labels.append('.3 aug 0 neg')
-#     elif i == 'control':
-#         labels.append('control')
-#     else:
-#         labels.append('.4 aug .4 neg')
-plt.legend(actualFiles)
-# plt.savefig('compared.png')
-plt.show()
+def graphManyVsMany(experimentPath, controlsPath, labels):
+    totalFPrate = []
+    totalSens = []
+    controlFPRate = []
+    controlSens = []
+
+    for file in os.listdir(experimentPath)[1:]:
+        trialPath = experimentPath + file + '/'
+        try:
+            totalFPrate.extend(pickle.load(open(trialPath + 'aug_FPratesAdj1.pickle', 'rb')))
+            totalSens.extend(pickle.load(open(trialPath + 'aug_sensitivities1.pickle', 'rb')))
+        except:
+            pass
+
+    for file in os.listdir(controlsPath):
+        trialPath = controlsPath + file + '/'
+        try:
+            controlFPRate.extend(pickle.load(open(trialPath + 'aug_FPratesAdj1.pickle', 'rb')))
+            controlSens.extend(pickle.load(open(trialPath + 'aug_sensitivities1.pickle', 'rb')))
+        except:
+            pass
+
+    print(len(totalFPrate), len(totalSens))
+    plt.scatter(totalFPrate, totalSens, marker='.')
+    plt.plot(np.linspace(0, 500, 100), np.poly1d(np.polyfit(totalFPrate, totalSens, 4))(np.linspace(0, 500, 100)), 'g')
+
+    print(len(controlFPRate), len(controlSens))
+    plt.scatter(controlFPRate, controlSens, marker='.')
+    plt.plot(np.linspace(0, 500, 100), np.poly1d(np.polyfit(controlFPRate, controlSens, 4))(np.linspace(0, 500, 100)), 'r--')
+
+    plt.xlabel('Adjusted False Positives per Scan')
+    plt.ylabel('Sensitivity')
+    plt.legend(labels)
+    plt.show()
+
+if __name__ == '__main__':
+    experimentPath = 'C:/Users/gaoan/Documents/Python Scripts/deep_learning_reu/images/experiment4/trials/'
+    controlsPath = 'C:/Users/gaoan/Documents/Python Scripts/deep_learning_reu/images/controls/trials/'
+    labels = []
+    labels.append('1 aug 1 neg')
+    labels.append('control')
+    labels.append('test scatterplot')
+    labels.append('control scatterplot')
+    # graphManyVsMany(experimentPath, controlsPath, labels)
+    graphOne(experimentPath, os.listdir(experimentPath))
