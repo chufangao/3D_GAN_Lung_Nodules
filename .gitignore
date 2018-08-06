@@ -1,7 +1,6 @@
-/images/*
+images/*
 *.png
-/saved_models/*
-*.swp
 our_models/saved_models/*
+*.swp
 our_models/Graph/*
 .idea/*

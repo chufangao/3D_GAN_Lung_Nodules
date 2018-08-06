@@ -112,7 +112,7 @@ k = 0
 numNodules = 0 #numNodules is the total number of nodules that exist across all scans
 numFakes = 0 #numFakes is the total number of nodules across all scans that 1-2 radiologists agreed on
 
-for seriesID in valSeries:
+for seriesID in valSeries[:2]:
     # get the validation file
     inputs = np.array(pickle.load(open(savepath + "ValClipped" + seriesID + ".pickle", 'rb')))
     inputs = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)
@@ -185,7 +185,7 @@ for modelfile in files:
 
     sensitivities = [(x * 1.0) / numNodules for x in experimentDict[modelfile]['numDetected']]
     FPrates = [(x * 1.0) / numScans for x in experimentDict[modelfile]['sumofFPs']]
-    FPratesAdj = [(a / c) * b / numScans for a, b, c in zip(experimentDict[modelfile]['numDetected'], experimentDict[modelfile]['sumofFPs'], experimentDict[modelfile]['sumofTPs'])]
+    FPratesAdj = [(a / (c+1e-10)) * b / numScans for a, b, c in zip(experimentDict[modelfile]['numDetected'], experimentDict[modelfile]['sumofFPs'], experimentDict[modelfile]['sumofTPs'])]
     fakeSensitivities = [((a + b) * 1.0) / (numNodules + numFakes) for a, b in zip(experimentDict[modelfile]['numDetected'], experimentDict[modelfile]['numFakesDetected'])]
 
     with open(trialFolder + "aug_sensitivities1.pickle", 'wb') as handle:

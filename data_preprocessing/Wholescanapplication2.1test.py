@@ -178,7 +178,8 @@ for modelfile in files:
 
     sensitivities = [(x * 1.0) / numNodules for x in experimentDict[modelfile]['numDetected']]
     FPrates = [(x * 1.0) / numScans for x in experimentDict[modelfile]['sumofFPs']]
-    FPratesAdj = [(a / c) * b / numScans for a, b, c in zip(experimentDict[modelfile]['numDetected'], experimentDict[modelfile]['sumofFPs'], experimentDict[modelfile]['sumofTPs'])]
+    #FPratesAdj = [(a / (c+1e-10)) * b / numScans for a, b, c in zip(experimentDict[modelfile]['numDetected'], experimentDict[modelfile]['sumofFPs'], experimentDict[modelfile]['sumofTPs'])]
+    FPratesAdj = [(a * b) / (numScans * c + 1e-10) for a, b, c in zip(experimentDict[modelfile]['numDetected'], experimentDict[modelfile]['sumofFPs'], experimentDict[modelfile]['sumofTPs'])]
     fakeSensitivities = [((a + b) * 1.0) / (numNodules + numFakes) for a, b in zip(experimentDict[modelfile]['numDetected'], experimentDict[modelfile]['numFakesDetected'])]
 
     with open(trialFolder + "aug_sensitivities1.pickle", 'wb') as handle:
