@@ -173,11 +173,11 @@ for seriesID in valSeries[:2]:
                 if FP:
                     fpArr[:threshold_index] += 1
                 if TP:
-                    fpArr[:threshold_index] += 1
+                    tpArr[:threshold_index] += 1
         experimentDict[modelfile]['numDetected'] += nodulesFoundArr
         experimentDict[modelfile]['numFakesDetected'] += fakeNodulesFoundArr
         experimentDict[modelfile]['sumofFPs'] += fpArr
-        experimentDict[modelfile]['sumofTPs'] += fpArr
+        experimentDict[modelfile]['sumofTPs'] += tpArr
 
 # post process the data
 for modelfile in files:
