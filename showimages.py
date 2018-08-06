@@ -1,6 +1,7 @@
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import pickle
 
@@ -49,10 +50,28 @@ def saveImgs(posdat, path):
 def scrollImg(image):
     # input dim (40, 40, 18, 1)
     # can't use Agg as backend
+    # image = np.clip(image, 0,1)
+
     fig, ax = plt.subplots(1, 1)
     tracker = IndexTracker(ax, image[:,:,:,0])
     fig.canvas.mpl_connect('scroll_event', tracker.onscroll)
     plt.show()
+
+
+def plot3d(image):
+    # print(np.amin(image), np.amax(image))
+    # image = np.clip(image, -.01,1)
+    image[image < -.01] = 0
+    x,y,z = image[:,:,:,0].nonzero()
+    print(len(x), len(y), len(z))
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    # ax.scatter(x,y,z,c=image.reshape(-1),cmap=plt.get_cmap('jet'), depthshade=False)
+    ax.scatter(x, y, z, marker='.', c=image[np.nonzero(image)].reshape(-1), cmap=plt.get_cmap('winter'), depthshade=False)
+    ax.axis('off')
+    plt.show()
+    plt.savefig("demo.png")
 
 
 if __name__ == '__main__':
@@ -61,5 +80,6 @@ if __name__ == '__main__':
     print(posdat.shape)
     # print('white imgs', [i for i, v in enumerate(posdat) if np.average(v) > .9])
     # print('black imgs', [i for i, v in enumerate(posdat) if np.average(v) < -.9])
-    saveImgs(posdat, 'desktop/')
-    # scrollImg(posdat[0])
+    # saveImgs(posdat, 'desktop/')
+    plot3d(posdat[12])
+    # scrollImg(posdat[1])
