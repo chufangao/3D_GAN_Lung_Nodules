@@ -120,25 +120,25 @@ for i in range(len(predictions)):
         TP = False
         for node in noduleBoxes:
             if coords[i] == node[1]:
-                if not node in nodulesFound:
+                if not node[0] in nodulesFound:
                     nodulesFound.add(node[0])
                     nodulesFoundArr[:threshold_index]+=1
                 FP = False
                 TP = True
         for node in fakeNoduleBoxes:
             if coords[i] == node[1]:
-                if not node in fakeNodulesFound:
+                if not node[0] in fakeNodulesFound:
                     fakeNodulesFound.add(node[0])
                     fakeNodulesFoundArr[:threshold_index]+=1
                 FP = False
         if FP:
             fpArr[:threshold_index] += 1
         if TP:
-            fpArr[:threshold_index] += 1
+            tpArr[:threshold_index] += 1
 experimentDict['numDetected'] += nodulesFoundArr
-experimentDict['numFakesDetected'] += nodulesFoundArr
+experimentDict['numFakesDetected'] += fakeNodulesFoundArr
 experimentDict['sumofFPs'] += fpArr
-experimentDict['sumofTPs'] += fpArr
+experimentDict['sumofTPs'] += tpArr
 
 
 
@@ -183,3 +183,15 @@ for num in range(len(thresholds)):
 print('numDetected:' + str(experimentDict['numDetected']==experimentDict2['numDetected']))
 print('dict1 numDetected:' + str(experimentDict['numDetected']))
 print('dict2 numDetected:' + str(experimentDict2['numDetected']))
+
+print('numFakesDetected:' + str(experimentDict['numFakesDetected']==experimentDict2['numFakesDetected']))
+print('dict1 numFakesDetected:' + str(experimentDict['numFakesDetected']))
+print('dict2 numFakesDetected:' + str(experimentDict2['numFakesDetected']))
+
+print('sumofFPs:' + str(experimentDict['sumofFPs']==experimentDict2['sumofFPs']))
+print('dict1 sumofFPs:' + str(experimentDict['sumofFPs']))
+print('dict2 sumofFPs:' + str(experimentDict2['sumofFPs']))
+
+print('sumofTPs:' + str(experimentDict['sumofTPs']==experimentDict2['sumofTPs']))
+print('dict1 sumofTPs:' + str(experimentDict['sumofTPs']))
+print('dict2 sumofTPs:' + str(experimentDict2['sumofTPs']))
