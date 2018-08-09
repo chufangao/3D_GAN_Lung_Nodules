@@ -153,6 +153,8 @@ for seriesID in valSeries[:2]:
         fakeNodulesFoundArr = np.zeros(len(thresholds))
 
         for i in range(len(predictions)):
+            # find the index of the first threshold that is greater than the prediction
+            # the program predicts that a nodule exists at all thresholds below that
             threshold_index = thresholds.searchsorted(predictions[i][0], side='right')
             if threshold_index > 0:
                 FP = True
