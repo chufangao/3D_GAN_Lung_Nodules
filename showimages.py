@@ -73,15 +73,27 @@ def plot3d(image):
     plt.show()
     plt.savefig("demo.png")
 
+
+def scale_range (input, min, max):
+    input += -(np.min(input))
+    input /= np.max(input) / (max - min)
+    input += min
+    return input
+
+
 def plotVoxels(image):
-    voxels = image > -0.01
-    voxels = np.reshape(voxels, (40,40,18))
-    # print(voxels.shape)
-    # print(voxels)
+    image[image < 0] = 0
+    voxels = np.reshape(image, (40,40,18))
+
+    print(np.amin(voxels), np.amax(voxels))
 
     fig = plt.figure()
     ax = fig.gca(projection='3d')
+    cmap = plt.get_cmap('gray')
+
+    # ax.voxels(voxels, facecolors=cmap(voxels), edgecolors=np.clip(2*cmap(voxels) - 0.5, 0, 1))
     ax.voxels(voxels, edgecolors='black')
+
     plt.show()
     return
 
@@ -94,6 +106,6 @@ if __name__ == '__main__':
     # print('black imgs', [i for i, v in enumerate(posdat) if np.average(v) < -.9])
     # saveImgs(posdat, 'desktop/')
     # plot3d(posdat[12])
-    plotVoxels(posdat[12])
-    # plotVoxels(posdat[1])
-    # scrollImg(posdat[1])
+    # plotVoxels(posdat[13])
+    plotVoxels(posdat[1])
+    # scrollImg(posdat[6])
