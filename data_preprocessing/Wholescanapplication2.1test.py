@@ -5,7 +5,7 @@ Created on Tue Aug  1 10:01:50 2017
 @author: SMAHESH
 """
 
-from sklearn.model_selection import RandomizedSearchCV
+#from sklearn.model_selection import RandomizedSearchCV
 import tensorflow as tf
 sess = tf.Session()
 
@@ -112,7 +112,7 @@ k = 0
 numNodules = 0 #numNodules is the total number of nodules that exist across all scans
 numFakes = 0 #numFakes is the total number of nodules across all scans that 1-2 radiologists agreed on
 
-for seriesID in valSeries:
+for seriesID in valSeries[:]:
     # get the validation file
     inputs = np.array(pickle.load(open(savepath + "ValClipped" + seriesID + ".pickle", 'rb')))
     inputs = inputs.reshape(inputs.shape[0], Xsize, Ysize, Zsize, 1)

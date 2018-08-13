@@ -54,7 +54,7 @@ latent_dim = 400
 generator_file = 'saved_models/g3.h5'
 
 #the number of fake positive examples and real negative examples to add to the base data set for each trial
-experiment_trials = [[0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]]
+experiment_trials = [[2,2] for i in range(10)]
 #experiment_trials = [[0,0], [.3,0], [.4,0], [.5,0], [.3,.3], [.4,.4], [.5,.5], [1,1]]
 #experiment_trials.extend([[.1,0], [1.0,0], [2.0,0], [.1,.1], [1.0,1.0], [2.0,2.0]])
 #experiment_trials.extend([[.3,0], [.4, 0], [.5,0], [.3,.3], [.4,.4], [.5,.5]])
