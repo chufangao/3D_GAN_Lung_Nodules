@@ -167,6 +167,7 @@ for seriesID in valSeries:
                         FPs += 1
                     if TP:
                         TPs += 1
+            #for this thresholds entry in 'numDetected,'
             experimentDict[modelfile]['numDetected'][num] += len(nodulesFound)
             experimentDict[modelfile]['numFakesDetected'][num] += len(fakeNodulesFound)
             experimentDict[modelfile]['sumofFPs'][num] += FPs
