@@ -73,13 +73,27 @@ def plot3d(image):
     plt.show()
     plt.savefig("demo.png")
 
+def plotVoxels(image):
+    voxels = image > -0.01
+    voxels = np.reshape(voxels, (40,40,18))
+    # print(voxels.shape)
+    # print(voxels)
+
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.voxels(voxels, edgecolors='black')
+    plt.show()
+    return
 
 if __name__ == '__main__':
     posdat = pickle.load(open('images/gen_nod3.pickle','rb'))
+    # posdat = pickle.load(open('images/gen_nod0.pickle', 'rb'))
     # posdat = pickle.load(open('images/PositiveAugmented.pickle','rb'))
     print(posdat.shape)
     # print('white imgs', [i for i, v in enumerate(posdat) if np.average(v) > .9])
     # print('black imgs', [i for i, v in enumerate(posdat) if np.average(v) < -.9])
     # saveImgs(posdat, 'desktop/')
-    plot3d(posdat[12])
+    # plot3d(posdat[12])
+    plotVoxels(posdat[12])
+    # plotVoxels(posdat[1])
     # scrollImg(posdat[1])
