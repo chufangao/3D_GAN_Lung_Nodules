@@ -11,6 +11,7 @@ The paper is published at SPIE Medical Imaging: Augmenting LIDC Dataset Using 3D
 (pdf available on [ResearchGate](https://www.researchgate.net/profile/Chufan_Gao/publication/331723419_Augmenting_LIDC_dataset_using_3D_generative_adversarial_networks_to_improve_lung_nodule_detection/links/5d2357a6299bf1547ca34e48/Augmenting-LIDC-dataset-using-3D-generative-adversarial-networks-to-improve-lung-nodule-detection.pdf))
 
 If you do decide to use this, please cite:
+```
 @inproceedings{gao2019augmenting,
   title={Augmenting LIDC dataset using 3D generative adversarial networks to improve lung nodule detection},
   author={Gao, Chufan and Clark, Stephen and Furst, Jacob and Raicu, Daniela},
@@ -20,3 +21,4 @@ If you do decide to use this, please cite:
   year={2019},
   organization={International Society for Optics and Photonics}
 }
+````
